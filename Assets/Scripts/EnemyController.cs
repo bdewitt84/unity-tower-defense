@@ -34,6 +34,9 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyController : MonoBehaviour
 {
+    [SerializeField] public float health;
+    public Vector3 starting_offset;
+    public Scheduling tower_controller;
     [SerializeField] private Transform lane;
     [SerializeField] private List<Transform> waypoints = new();
     [SerializeField] private int waypointIndex = 0;
@@ -41,20 +44,23 @@ public class EnemyController : MonoBehaviour
     private Transform currentWaypoint;
 
     [SerializeField] private float speed = 4f;
-    [SerializeField] private int health = 100;
+    //[SerializeField] private int health = 100;
 
 
     // Start is called once before the first execution of Update after the
     // MonoBehaviour is created
     void Start()
     {
+        this.gameObject.transform.position = starting_offset;
+        tower_controller = GameObject.Find("Towers");
         GetWaypointsFromLane();
         SetNextWaypoint();
     }
-
+    
     // Update is called once per frame
     void Update()
     {
+        //this.gameObject.transform.position += new Vector3(Time.deltaTime * speed, 0.0f, 0.0f);
         if (AtCurrentWaypoint())
         {
             AlignWithWaypoint();
@@ -94,13 +100,15 @@ public class EnemyController : MonoBehaviour
         {
             Debug.Log("Lane has no waypoints. Enemy cannot proceed and will" +
                       "be destroyed.");
-            Die();
+            //Die();
+            //tower_controller.UpdateSchedules(this.gameObject);
         }
     }
 
     // Reduces enemy's health by the specified damage amount. When health falls
     // below zero, triggers the handler for losing all health.
-    public void TakeDamage(int damage)
+    //Commented it out because I handle this 
+    /*public void TakeDamage(int damage)
     {
         if (damage < 0)
         {
@@ -113,13 +121,13 @@ public class EnemyController : MonoBehaviour
         {
             HandleLostAllHealth();
         }
-    }
+    }*/
 
     // Returns the current remaining health of the enemy
-    public int GetCurrentHealth()
+    /*public int GetCurrentHealth()
     {
         return health;
-    }
+    }*/
 
 
     //
@@ -164,21 +172,24 @@ public class EnemyController : MonoBehaviour
         if (waypoints == null)
         {
             Debug.Log("Cannot set next waypoint. Waypoints is null.");
-            Die();
+            //Die();
+            tower_controller.UpdateSchedules(this.gameObject);
             return;
         }
 
         if (waypoints.Count == 0)
         {
             Debug.Log("Cannot set next waypoint. Waypoints list is empty.");
-            Die();
+            //Die();
+            tower_controller.UpdateSchedules(this.gameObject);
             return;
         }
 
         if (waypointIndex < 0 || waypointIndex >= waypoints.Count)
         {
             Debug.Log("Cannt set next waypoint. Index is out of range.");
-            Die();
+            //Die();
+            tower_controller.UpdateSchedules(this.gameObject);
             return;
         }
 
@@ -228,7 +239,8 @@ public class EnemyController : MonoBehaviour
         // animation?
         // play sounds?
         // destroy self
-        Die();
+        //Die();
+        tower_controller.UpdateSchedules(this.gameObject);
     }
 
     // Moves towards the current waypoint
@@ -241,20 +253,21 @@ public class EnemyController : MonoBehaviour
     }
 
     // Handles the logic when enemy's health falls below zero
-    private void HandleLostAllHealth()
+    // Removed because my script, Attack, handles this already
+    /*private void HandleLostAllHealth()
     {
         // Did we die, or do we do something special when we lose all health?
         //  e.g. self destruct, buff friends, etc.
         // Reward player
         // destroy self
         Die();
-    }
+    }*/
 
     // Destroys the game object, removing it from the game
-    private void Die()
+    /*private void Die()
     {
         Destroy(gameObject);
-    }
+    }*/
 }
 
 
