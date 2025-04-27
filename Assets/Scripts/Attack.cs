@@ -3,11 +3,17 @@ using System.Collections;
 public class Attack : MonoBehaviour
 {
     public Material laser_mat;
-    private LineRenderer laser;
+    public LineRenderer laser;
     public Vector3 start;
-    private GameObject currentenemy;
+    public GameObject currentenemy;
+    //public int count;
+    public int damage;
     //private float timer;
-    public ArrayList schedule = new ArrayList();//<GameObject>();
+    public ArrayList schedule = new ArrayList();
+    private GameObject[] enemies;
+    //private GameObject[] towers;
+    public EnemyController currentenemy_script;
+    public Scheduling parent_script;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,6 +22,7 @@ public class Attack : MonoBehaviour
         laser.SetPosition(0, start);
         laser.widthMultiplier = 0.2f;
         //timer = 0.5f;
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
     // Update is called once per frame
@@ -27,28 +34,64 @@ public class Attack : MonoBehaviour
         //    timer -= 0.5f;
         //    Occasional();
         //}
-        if (schedule.Count == 0)
+        //count = schedule.Count;
+        /*float distance = Vector3.Distance(this.transform.position, currentenemy.transform.position);
+        if (distance > 10.0f)
+        {
+            RemoveFromSchedule(currentenemy);
+            currentenemy = null;
+            //NextEnemy();
+            currentenemy = (GameObject)schedule[0];
+        }*/
+        if (currentenemy == null)
             laser.SetPosition(1, start);
         else
         {
-            //currentenemy = schedule[0];
             laser.SetPosition(1, currentenemy.transform.position);
+            currentenemy_script.health -= Time.deltaTime * damage;
+            if (currentenemy_script.health < 0.0f)
+            {
+                parent_script.UpdateSchedules(currentenemy);
+                if (schedule.Count == 0)
+                {
+                    laser.SetPosition(1, start);
+                }
+                else
+                {
+                    currentenemy = (GameObject)schedule[0];
+                    currentenemy_script = currentenemy.GetComponent<EnemyController>();
+                    laser.SetPosition(1, currentenemy.transform.position);
+                }
+            }
         }
     }
-    public void Schedule(GameObject enemy)
+    /*void NextEnemy()
     {
-        schedule.Add(enemy);
+        for(int i = 0; i < schedule.Count; i++)
+            if (Vector3.Distance(schedule[i].transform.position, this.transform.position) > 10.0f)
+                RemoveFromSchedule((GameObject)schedule[i]);
+            else
+            {
+                currentenemy = (GameObject)schedule[i];
+                break;
+            }
+    }*/
+    void OnTriggerEnter(Collider other)
+    {
+        if (!(other.gameObject.CompareTag("Enemy")))
+            return;
+        schedule.Add(other.gameObject);
+        if (currentenemy == null)
+            currentenemy = (GameObject)schedule[0];
+        currentenemy_script = currentenemy.GetComponent<EnemyController>();
     }
-    public void RemoveFromSchedule(GameObject enemy)
+    void OnTriggerExit(Collider other)
     {
-        schedule.Remove(enemy);
+        if (!(other.gameObject.CompareTag("Enemy")))
+            return;
+        schedule.Remove(other);
         if (schedule.Count == 0)
-            laser.SetPosition(1, start);
-        else
-        {
-            //currentenemy = schedule[0];
-            laser.SetPosition(1, enemy.transform.position);
-        }
+            currentenemy = null;
     }
     /*void Occasional()
     {
