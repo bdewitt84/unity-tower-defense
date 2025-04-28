@@ -60,7 +60,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     private void FireAtTarget()
     {
-        Debug.Log($"Firing at {currentTarget.name}");
         currentTarget.TakeDamage(damage);
         currentCooldown = maxCooldown;
     }
@@ -75,7 +74,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
             if (distance <= maxRange)
             {
                 currentTarget = enemy;
-                Debug.Log($"Found a new target: {currentTarget}!");
                 break;
             }
         }

@@ -109,7 +109,6 @@ public class EnemyController : MonoBehaviour
             damage = 0;
         }
         health -= damage;
-        Debug.Log($"Ouch! I took {damage} damage!");
         if (health < 0)
         {
             HandleLostAllHealth();
