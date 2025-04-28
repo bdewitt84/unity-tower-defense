@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using static UnityEngine.EventSystems.EventTrigger;
+using System.Collections;
 
 
 // Author: Brett DeWitt
@@ -43,6 +44,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float speed = 4f;
     [SerializeField] private float health = 100;
 
+    private Material enemyMaterial;
+    [SerializeField] private Color hitFlashColor = Color.red; // Color when hit
+    [SerializeField] private float hitFlashDuration = 0.5f; // Total time for flashing
+
 
     // Start is called once before the first execution of Update after the
     // MonoBehaviour is created
@@ -50,6 +55,7 @@ public class EnemyController : MonoBehaviour
     {
         GetWaypointsFromLane();
         SetNextWaypoint();
+        enemyMaterial = GetComponent<Renderer>().material;
     }
 
     // Update is called once per frame
@@ -109,6 +115,7 @@ public class EnemyController : MonoBehaviour
             damage = 0;
         }
         health -= damage;
+        StartCoroutine(FlashEnemy());
         if (health < 0)
         {
             HandleLostAllHealth();
@@ -255,6 +262,23 @@ public class EnemyController : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    // Flashes when hit
+    private IEnumerator FlashEnemy()
+    {
+        // Store the original color of the material
+        Color originalColor = enemyMaterial.color;
+
+        // Change to the flash color (red)
+        enemyMaterial.color = hitFlashColor;
+
+        // Wait for the specified duration
+        yield return new WaitForSeconds(hitFlashDuration);
+
+        // Revert back to the original color
+        enemyMaterial.color = originalColor;
+    }
 }
+
 
 

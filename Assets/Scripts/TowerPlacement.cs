@@ -1,6 +1,17 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+
+// Author: Dante Borden
+//
+// Created: 4.27.2025
+//
+// Description:
+//
+// Handles player-controlled tower placement in the game world.
+// Casts a ray from the mouse position to detect valid ground areas for tower spawning.
+//
+// Modified:
+//   4.27.25
+//   fixed typos, unresolved references, corrected code
 
 public class TowerPlacement : MonoBehaviour
 {

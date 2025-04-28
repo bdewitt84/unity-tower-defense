@@ -1,8 +1,17 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
+
+
+// Author: Brett DeWitt
+//
+// Created: 4.27.2025
+//
+// Description:
+//
+// Manages enemy wave spawning.
+// Spawns enemies at regular intervals during a wave, 
+// and controls the timing between successive waves.
+
 
 public class EnemySpawnerController : MonoBehaviour
 {
@@ -48,16 +57,19 @@ public class EnemySpawnerController : MonoBehaviour
         }
     }
 
+    // Returns whether a wave is currently active
     private bool WaveInProgress()
     {
         return waveInProgress;
     }
 
+    // Returns whether enough time has passed to spawn the next enemy
     private bool TimeForNextSpawn()
     {
         return (timeSinceLastSpawn >= spawnInterval);
     }
 
+    // Spawns the next enemy from the wave queue
     private void SpawnNextEnemy()
     {
         GameObject nextEnemy = wave.Dequeue();
@@ -65,31 +77,37 @@ public class EnemySpawnerController : MonoBehaviour
         timeSinceLastSpawn = 0.0f;
     }
 
+    // Returns whether all enemies in the current wave have been spawned
     private bool AllEnemiesSpawned()
     {
         return (wave.Count <= 0);
     }
 
+    // Ends the current wave
     private void EndWave()
     {
         waveInProgress = false;
     }
 
+    // Updates the spawn timer each frame
     private void UpdateSpawnTimer()
     {
         timeSinceLastSpawn += Time.deltaTime;
     }
 
+    // Updates the wave timer each frame
     private void UpdateWaveTimer()
     {
         timeSinceLastWave += Time.deltaTime;
     }
 
+    // Returns whether enough time has passed to start a new wave
     private bool TimeForWave()
     {
         return timeSinceLastWave >= waveInterval;
     }
 
+    // Creates a new wave of enemy objects and queues them for spawning
     private void InitializeWave()
     {
         wave.Clear();
@@ -104,11 +122,13 @@ public class EnemySpawnerController : MonoBehaviour
         }
     }
 
+    // Resets the timer used for wave intervals
     private void ResetWaveTimer()
     {
         timeSinceLastWave = 0.0f;
     }
 
+    // Starts a new enemy wave
     private void StartNextWave()
     {
         waveInProgress = true;
