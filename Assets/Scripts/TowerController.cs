@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 
 
-/// Author: Brett DeWitt
+/// Author: Brett DeWitt, Minsu Kim
 /// 
 /// Created: 04.27.2025
 /// 
@@ -30,14 +30,20 @@ public class NewMonoBehaviourScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Initialize the tower's material
-        towerMaterial = GetComponent<Renderer>().material;
-
-        // Check if the material is found
-        if (towerMaterial == null)
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer == null)
         {
-            Debug.LogError("Tower's material is not assigned!");
+            Debug.LogError("Tower has no Renderer component!");
+            return;
         }
+
+        if (renderer.material == null)
+        {
+            Debug.LogError("Tower's Renderer has no material assigned!");
+            return;
+        }
+
+        towerMaterial = renderer.material;
     }
 
     // Update is called once per frame
@@ -75,19 +81,23 @@ public class NewMonoBehaviourScript : MonoBehaviour
     // Checks if the target is within the tower's attack range.
     private bool TargetIsInRange()
     {
+        if (currentTarget == null) return false;
         float targetDistance = Vector3.Distance(transform.position, currentTarget.transform.position);
-        return (targetDistance < maxRange);
+        return targetDistance < maxRange;
     }
 
     // Attacks the target, applies damage, and triggers the flash effect
     private void FireAtTarget()
     {
-        currentTarget.TakeDamage(damage);
-        if (!isFlashing) // Prevent multiple flashes from happening simultaneously
+        if (currentTarget != null)
         {
-            StartCoroutine(FlashTower()); // Start the flash when firing
+            currentTarget.TakeDamage(damage);
+            if (!isFlashing)
+            {
+                StartCoroutine(FlashTower());
+            }
+            currentCooldown = maxCooldown;
         }
-        currentCooldown = maxCooldown;
     }
 
     // Searches for a new target within range if no target is found or current target is lost

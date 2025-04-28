@@ -32,6 +32,8 @@ using System.Collections;
 //    EnemyController enemy = hitEnemyGameObject.GetComponent<EnemyController>();
 //    enemy.TakeDamage(10);
 
+// Author: Minsu Kim 
+// 
 
 public class EnemyController : MonoBehaviour
 {
@@ -51,11 +53,26 @@ public class EnemyController : MonoBehaviour
 
     // Start is called once before the first execution of Update after the
     // MonoBehaviour is created
-    void Start()
+    private void Start()
     {
+        if (lane == null)
+        {
+            Debug.LogError("[EnemyController] Lane not assigned. Destroying self.");
+            Die();
+            return;
+        }
+
         GetWaypointsFromLane();
+
+        if (waypoints.Count == 0)
+        {
+            Debug.LogError("[EnemyController] No waypoints found in lane. Destroying self.");
+            Die();
+            return;
+        }
+
         SetNextWaypoint();
-        enemyMaterial = GetComponent<Renderer>().material;
+        InitializeMaterial();
     }
 
     // Update is called once per frame
@@ -93,13 +110,11 @@ public class EnemyController : MonoBehaviour
             throw new ArgumentNullException("Lane must not be null");
         }
         this.lane = lane;
-
         GetWaypointsFromLane();
 
         if (waypoints.Count <= 0)
         {
-            Debug.Log("Lane has no waypoints. Enemy cannot proceed and will" +
-                      "be destroyed.");
+            Debug.LogError("[EnemyController] Lane has no waypoints. Destroying self.");
             Die();
         }
     }
@@ -108,15 +123,14 @@ public class EnemyController : MonoBehaviour
     // below zero, triggers the handler for losing all health.
     public void TakeDamage(float damage)
     {
-        if (damage < 0)
+        if (damage < 0f)
         {
-            Debug.Log("Damage must be a non-negative value. Setting damage" +
-                      "to 0.");
-            damage = 0;
+            Debug.LogWarning("[EnemyController] Negative damage received. Clamping to 0.");
+            damage = 0f;
         }
         health -= damage;
         StartCoroutine(FlashEnemy());
-        if (health < 0)
+        if (health < 0f)
         {
             HandleLostAllHealth();
         }
@@ -127,7 +141,11 @@ public class EnemyController : MonoBehaviour
     {
         return health;
     }
-
+    private void InitializeMaterial()
+    {
+        enemyMaterial = new Material(GetComponent<Renderer>().material);
+        GetComponent<Renderer>().material = enemyMaterial;
+    }
 
     //
     // Private Helper functions
@@ -209,7 +227,7 @@ public class EnemyController : MonoBehaviour
     {
         if (currentWaypoint == null)
         {
-            Debug.Log("No current waypoint set.");
+            Debug.LogWarning("[EnemyController] Current waypoint is null.");
             return false;
         }
         else
@@ -228,6 +246,8 @@ public class EnemyController : MonoBehaviour
         return (waypointIndex >= lane.childCount);
     }
 
+    // Check if the enemy has reached the endpoint
+    // and handle what happens when it arrives (e.g., reduce player health, destroy enemy, etc.)
     // Handles logic when the enemy has visited the final waypoint
     private void HandleReachedGoal()
     {
@@ -235,6 +255,7 @@ public class EnemyController : MonoBehaviour
         // animation?
         // play sounds?
         // destroy self
+        Debug.Log("Enemy reached the endpoint!");
         Die();
     }
 
