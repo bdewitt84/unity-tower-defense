@@ -71,7 +71,10 @@ public class EnemyController : MonoBehaviour
             AlignWithWaypoint();
             if (VisitedAllWaypoints())
             {
-                HandleReachedGoal();
+                // animation?
+                // play sounds?
+                BroadcastEnemyReachedGoalEvent();
+                Die();
             }
             else
             {
@@ -229,16 +232,6 @@ public class EnemyController : MonoBehaviour
         return (waypointIndex >= lane.childCount);
     }
 
-    // Handles logic when the enemy has visited the final waypoint
-    private void HandleReachedGoal()
-    {
-        // penalize player
-        // animation?
-        // play sounds?
-        // destroy self
-        Die();
-    }
-
     // Moves towards the current waypoint
     private void MoveTowardWaypoint()
     {
@@ -269,6 +262,12 @@ public class EnemyController : MonoBehaviour
         // Revert back to the original color
         enemyMaterial.color = originalColor;
     }
+
+    private void BroadcastEnemyReachedGoalEvent()
+    {
+        GameEvents.EnemyReachedGoal(this);
+    }
+
     private void BroadcaseEnemyKilledEvent()
     {
         GameEvents.EnemyKilled(this);
