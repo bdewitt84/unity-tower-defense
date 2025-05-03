@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 // Author: Dante Borden
 //
@@ -21,28 +23,51 @@ public class TowerPlacement : MonoBehaviour
     private RaycastHit _hit;
 
     public bool placing;
+    private Ray ray;
 
-    void Update()
+
+    private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (left_mouse_button_is_down())
         {
-            if (Camera.main != null)
+            if (camera_is_not_null())
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                if (Physics.Raycast(ray, out _hit))
+                get_location_of_click();
+                if (location_of_click_is_ground())
                 {
-                    if (_hit.transform.CompareTag("Ground"))
-                    {
-                        place = _hit.point;
-
-                        Instantiate(tower, place, Quaternion.identity);
-
-                        placing = false;
-                    }
+                    place_tower();
                 }
             }
         }
     }
+
+    private void place_tower()
+    {
+        place = _hit.point;
+        Instantiate(tower, place, Quaternion.identity);
+        placing = false;
+    }
+
+    private bool location_of_click_is_ground()
+    {
+        return _hit.transform.CompareTag("Ground");
+    }
+
+    private void get_location_of_click()
+    {
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray, out _hit);
+    }
+
+    private bool camera_is_not_null()
+    {
+        return Camera.main != null;
+    }
+
+    private bool left_mouse_button_is_down()
+    {
+        return Input.GetMouseButtonDown(0);
+    }
 }
+
 
