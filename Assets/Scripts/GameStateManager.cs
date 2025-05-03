@@ -12,6 +12,8 @@ using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
+    [SerializeField] private int playerHealth = 100;
+
     private void OnEnable()
     {
         GameEvents.OnEnemyKilled += HandleEnemyKilled;
@@ -27,6 +29,7 @@ public class GameStateManager : MonoBehaviour
 
     private void HandleEnemyReachedGoal(EnemyController enemy)
     {
+        playerHealth -= 5;
         Debug.Log("Enemy reached goal");
     }
 
