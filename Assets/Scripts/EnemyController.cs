@@ -61,6 +61,11 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (OutOfHealth())
+        {
+            BroadcaseEnemyKilledEvent();
+            Die();
+        }
         if (AtCurrentWaypoint())
         {
             AlignWithWaypoint();
@@ -75,7 +80,6 @@ public class EnemyController : MonoBehaviour
         }
         MoveTowardWaypoint();
     }
-
 
     //
     // Public API functions
@@ -116,11 +120,8 @@ public class EnemyController : MonoBehaviour
         }
         health -= damage;
         StartCoroutine(FlashEnemy());
-        if (health < 0)
-        {
-            HandleLostAllHealth();
-        }
     }
+
 
     // Returns the current remaining health of the enemy
     public float GetCurrentHealth()
@@ -247,16 +248,6 @@ public class EnemyController : MonoBehaviour
         transform.position = moveTowards;
     }
 
-    // Handles the logic when enemy's health falls below zero
-    private void HandleLostAllHealth()
-    {
-        // Did we die, or do we do something special when we lose all health?
-        //  e.g. self destruct, buff friends, etc.
-        // Reward player
-        // destroy self
-        Die();
-    }
-
     // Destroys the game object, removing it from the game
     private void Die()
     {
@@ -278,6 +269,16 @@ public class EnemyController : MonoBehaviour
         // Revert back to the original color
         enemyMaterial.color = originalColor;
     }
+    private void BroadcaseEnemyKilledEvent()
+    {
+        GameEvents.EnemyKilled(this);
+    }
+
+    private bool OutOfHealth()
+    {
+        return health <= 0;
+    }
+
 }
 
 
