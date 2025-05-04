@@ -4,7 +4,7 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 // Author: Dante Borden
 //
-// Created: 4.27.2025
+// Created: 04.27.2025
 //
 // Description:
 //
@@ -12,8 +12,10 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 // Casts a ray from the mouse position to detect valid ground areas for tower spawning.
 //
 // Modified:
-//   4.27.25
+//   04.27.25 Brett DeWitt
 //   fixed typos, unresolved references, corrected code
+//   05.03.25 Brett DeWitt
+//   refactored for readability
 
 public class TowerPlacement : MonoBehaviour
 {
@@ -44,7 +46,11 @@ public class TowerPlacement : MonoBehaviour
     private void place_tower()
     {
         place = _hit.point;
-        Instantiate(tower, place, Quaternion.identity);
+        double snapToGridX = Math.Round(_hit.point.x);
+        double snapToGridY = Math.Round(_hit.point.y);
+        double snapToGridZ = Math.Round(_hit.point.z);
+        Vector3 snapToGridplace = new Vector3((float)snapToGridX, (float)snapToGridY, (float)snapToGridZ);
+        Instantiate(tower, snapToGridplace, Quaternion.identity);
         placing = false;
     }
 
