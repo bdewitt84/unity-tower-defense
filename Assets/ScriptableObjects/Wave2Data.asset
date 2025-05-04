@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7f1ffb615c17fa49b0926232c13edd1, type: 3}
   m_Name: Wave2Data
   m_EditorClassIdentifier: 
-  waveNumber: 0
-  spawnDelay: 0
-  enemyCount: 0
-  spawnInterval: 0
+  waveNumber: 2
+  spawnDelay: 4
+  enemyCount: 8
+  spawnInterval: 0.9

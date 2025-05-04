@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Wave1Data
   m_EditorClassIdentifier: 
   waveNumber: 1
-  spawnDelay: 0.5
+  spawnDelay: 5
   enemyCount: 5
-  spawnInterval: 2
+  spawnInterval: 1
