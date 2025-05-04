@@ -93,7 +93,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     // Searches for a new target within range if no target is found or current target is lost
     private void TryToFindNewTarget()
     {
-        EnemyController[] enemies = GameObject.FindObjectsOfType<EnemyController>();
+        EnemyController[] enemies = GameObject.FindObjectsByType<EnemyController>(FindObjectsSortMode.None);
 
         foreach (EnemyController enemy in enemies)
         {
