@@ -46,4 +46,8 @@ public static class GameEvents
     // PlayerGoldChanged
     public static Action<int> OnPlayerGoldChanged;
     public static void PlayerGoldChanged(int updatedPlayerGold) => OnPlayerGoldChanged?.Invoke(updatedPlayerGold);
+
+    // PlayerHealthChanged
+    public static Action<int> OnPlayerHealthChanged;
+    public static void PlayerHealthChanged(int updatedPlayerHealth) => OnPlayerHealthChanged?.Invoke(updatedPlayerHealth);
 }
