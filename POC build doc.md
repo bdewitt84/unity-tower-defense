@@ -30,7 +30,8 @@
 ### Minsu
 - **Role**: Sound Manager
 - **Contributions**: 
-    - ???
+    - Bug-fixing
+    - Reimplemented Materials for Enemy & Tower
 
 ---
 
