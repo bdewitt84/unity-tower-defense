@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +26,9 @@ public class EnemySpawnerController : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform lane;
+    private int waveIndex = 0;
+
+    [SerializeField] private List<WaveData> waves;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -50,11 +54,22 @@ public class EnemySpawnerController : MonoBehaviour
             UpdateWaveTimer();
             if (TimeForWave())
             {
-                InitializeWave();
-                ResetWaveTimer();
-                StartNextWave();
+                if (AllWavesCleared())
+                {
+                    // send end game event
+                } else
+                {
+                    InitializeWave();
+                    ResetWaveTimer();
+                    StartNextWave();
+                }
             }
         }
+    }
+
+    private bool AllWavesCleared()
+    {
+        return waveIndex >= waves.Count;
     }
 
     // Returns whether a wave is currently active
@@ -86,6 +101,7 @@ public class EnemySpawnerController : MonoBehaviour
     // Ends the current wave
     private void EndWave()
     {
+        waveIndex += 1;
         waveInProgress = false;
     }
 
@@ -111,6 +127,10 @@ public class EnemySpawnerController : MonoBehaviour
     private void InitializeWave()
     {
         wave.Clear();
+        WaveData currentWaveData = waves[waveIndex];
+        spawnInterval = currentWaveData.spawnInterval;
+        waveSize = currentWaveData.enemyCount;
+
         for(int i = 0; i < waveSize; i++)
         {
             GameObject enemyObject = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
