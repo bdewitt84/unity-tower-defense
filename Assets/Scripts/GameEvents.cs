@@ -42,4 +42,8 @@ public static class GameEvents
     // EnemyReachedGoal
     public static Action<EnemyController> OnEnemyReachedGoal;
     public static void EnemyReachedGoal(EnemyController enemy) => OnEnemyReachedGoal?.Invoke(enemy);
+
+    // PlayerGoldChanged
+    public static Action<int> OnPlayerGoldChanged;
+    public static void PlayerGoldChanged(int updatedPlayerGold) => OnPlayerGoldChanged?.Invoke(updatedPlayerGold);
 }
