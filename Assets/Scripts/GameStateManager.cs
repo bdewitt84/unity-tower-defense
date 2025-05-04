@@ -12,8 +12,14 @@ using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
-    [SerializeField] private int playerHealth = 100;
-    [SerializeField] private int playerGold = 0;
+    [SerializeField] private int playerHealth;
+    [SerializeField] private int playerHealthStart = 100;
+
+    private void Start()
+    {
+        playerHealth = playerHealthStart;
+        GameEvents.OnPlayerHealthChanged(playerHealth);
+    }
 
     private void OnEnable()
     {
@@ -31,6 +37,7 @@ public class GameStateManager : MonoBehaviour
     private void HandleEnemyReachedGoal(EnemyController enemy)
     {
         playerHealth -= 5;
+        GameEvents.PlayerHealthChanged(playerHealth);
     }
 
     private void HandleEnemyKilled(EnemyController enemy)
