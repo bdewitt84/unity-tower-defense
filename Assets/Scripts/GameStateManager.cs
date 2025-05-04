@@ -13,12 +13,16 @@ using UnityEngine;
 public class GameStateManager : MonoBehaviour
 {
     [SerializeField] private int playerHealth;
+    [SerializeField] private int playerGold;
     [SerializeField] private int playerHealthStart = 100;
+    [SerializeField] private int playerGoldStart = 30;
 
     private void Start()
     {
         playerHealth = playerHealthStart;
         GameEvents.OnPlayerHealthChanged(playerHealth);
+        playerGold = playerGoldStart;
+        GameEvents.OnPlayerGoldChanged(playerGold);
     }
 
     private void OnEnable()
@@ -43,6 +47,7 @@ public class GameStateManager : MonoBehaviour
     private void HandleEnemyKilled(EnemyController enemy)
     {
         playerGold += 5;
+        GameEvents.PlayerGoldChanged(playerGold);
     }
 
 }

@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         GameEvents.OnPlayerHealthChanged += HandlePlayerHealthChanged;
+        GameEvents.OnPlayerGoldChanged += HandlePlayerGoldChanged;
     }
 
     //
@@ -27,5 +28,10 @@ public class UIManager : MonoBehaviour
     private void HandlePlayerHealthChanged(int updatedHealth)
     {
         playerHealthText.text = "Health: " + updatedHealth.ToString();
+    }
+
+    private void HandlePlayerGoldChanged(int updatedGold)
+    {
+        playerGoldText.text = "Gold: " + updatedGold.ToString();
     }
 }
