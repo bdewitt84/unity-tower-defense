@@ -32,8 +32,6 @@ using System.Collections;
 //    EnemyController enemy = hitEnemyGameObject.GetComponent<EnemyController>();
 //    enemy.TakeDamage(10);
 
-// Author: Minsu Kim 
-// 
 
 public class EnemyController : MonoBehaviour
 {
