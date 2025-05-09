@@ -35,7 +35,6 @@ public class GameBoardController : MonoBehaviour
             Vector3 placeAt = GetWorldPositionFromGridCoordinates(gridCoordinate);
             Vector3 towerOffset = new Vector3(0.5f, 0.0f, 0.5f);
             placeAt += towerOffset;
-            Debug.Log($"HandleTowerPlacement: {placeAt}");
             InstantiateTower(placeAt);
             board.SetCellBlocked(gridCoordinate.X, gridCoordinate.Y);
         }
@@ -49,7 +48,6 @@ public class GameBoardController : MonoBehaviour
 
     private void InstantiateTower(Vector3 globalPosition)
     {
-        Debug.Log($"InstantiateTower: {globalPosition}");
         GameObject tower = Instantiate(towerPrefab, globalPosition, Quaternion.identity);
     }
 
