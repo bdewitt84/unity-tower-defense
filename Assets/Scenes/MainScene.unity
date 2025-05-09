@@ -199,6 +199,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3110b2bed5f7f4894042faaaef0e46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  width: 22
+  height: 22
+  towerPrefab: {fileID: 7092247501507110302, guid: 76e5b9efc43270c44bd86ebd59b22acc, type: 3}
 --- !u!4 &130417953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6453233240354781277, guid: 865813ac37a07b44789c0ae4581d9973, type: 3}
