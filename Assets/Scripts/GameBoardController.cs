@@ -2,36 +2,86 @@ using UnityEngine;
 
 public class GameBoardController : MonoBehaviour
 {
-    enum CellState { Empty, Blocked }
+    private enum CellState { Empty, Blocked }
+
     [SerializeField] private int width = 22;
     [SerializeField] private int height = 22;
-    private CellState[,] board;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private GameObject towerPrefab;
+    [SerializeField] private Vector3 gridOffset = new(-10.5f, 0.0f, -10.5f);
+
+    private GameBoard board;
+
+    private void Start()
     {
-         board = new CellState[width, height];
+        board = new GameBoard(width, height);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        GameEvents.OnTowerPlacementRequest += HandleTowerPlacementRequest;
     }
 
-    bool CellIsBlocked(int x, int y)
+    private void OnDisable()
     {
-        return board[x, y] == CellState.Blocked;
+        GameEvents.OnTowerPlacementRequest -= HandleTowerPlacementRequest;
     }
 
-    void SetCellBlocked(int x, int y)
+    private void HandleTowerPlacementRequest(Vector3 globalPosition)
     {
-        board[x,y] = CellState.Blocked;
-        // Raise BoardStateChanged event?
+        GridCoordinate gridCoordinate = GetGridCoordinatesFromWorldPosition(globalPosition);
+        string reason;
+        if (CanPlaceTower(gridCoordinate, out reason))
+        {
+            Vector3 placeAt = GetWorldPositionFromGridCoordinates(gridCoordinate);
+            InstantiateTower(placeAt);
+            board.SetCellBlocked(gridCoordinate.X, gridCoordinate.Y);
+        }
+        else
+        {
+            GameEvents.TowerPlacementInvalid(gridCoordinate.X, gridCoordinate.Y);
+            Debug.LogWarning(reason);
+        }
     }
 
-    void SetCellEmpty(int x, int y)
+
+    private void InstantiateTower(Vector3 globalPosition)
     {
-        board[x, y] = CellState.Empty;
-        // Raise BoardStateChanged event?
+        GameObject tower = Instantiate(towerPrefab, globalPosition, Quaternion.identity);
+    }
+
+    private bool CanPlaceTower(GridCoordinate gridCoordinate, out string reason)
+    {
+        if (!board.IsWithinBounds(gridCoordinate.X, gridCoordinate.Y))
+        {
+            reason = $"Tower placement coordinates out of bounds: {gridCoordinate}";
+            return false;
+        }
+        if (!board.IsCellEmpty(gridCoordinate.X, gridCoordinate.Y))
+        {
+            reason = $"Cell already occupied: {gridCoordinate}";
+            return false;
+        }
+        reason = null;
+        return true;
+    }
+
+
+    // Retrurns the grid coordinates corresponding to the global Vector3 position
+    private GridCoordinate GetGridCoordinatesFromWorldPosition(Vector3 worldPosition)
+    {
+        worldPosition -= gridOffset;
+        int gridX = Mathf.FloorToInt(worldPosition.x);
+        int gridY = Mathf.FloorToInt(worldPosition.z);
+        return new GridCoordinate(gridX, gridY);
+    }
+
+    private Vector3 GetWorldPositionFromGridCoordinates(GridCoordinate gridCoordinate)
+    {
+        Vector3 worldPosition = new Vector3(
+            gridCoordinate.X,
+            transform.position.y,
+            gridCoordinate.Y)
+            + gridOffset;
+        return worldPosition;
     }
 }
