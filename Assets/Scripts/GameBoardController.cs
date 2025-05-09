@@ -7,7 +7,7 @@ public class GameBoardController : MonoBehaviour
     [SerializeField] private int width = 22;
     [SerializeField] private int height = 22;
     [SerializeField] private GameObject towerPrefab;
-    [SerializeField] private Vector3 gridOffset = new(-10.5f, 0.0f, -10.5f);
+    [SerializeField] private Vector3 offsetFromOrigin = new(-11.0f, 0.0f, -11.0f);
 
     private GameBoard board;
 
@@ -28,11 +28,14 @@ public class GameBoardController : MonoBehaviour
 
     private void HandleTowerPlacementRequest(Vector3 globalPosition)
     {
-        GridCoordinate gridCoordinate = GetGridCoordinatesFromWorldPosition(globalPosition);
+        GridCoordinate gridCoordinate = GetGridCoordinateFromWorldPosition(globalPosition);
         string reason;
         if (CanPlaceTower(gridCoordinate, out reason))
         {
             Vector3 placeAt = GetWorldPositionFromGridCoordinates(gridCoordinate);
+            Vector3 towerOffset = new Vector3(0.5f, 0.0f, 0.5f);
+            placeAt += towerOffset;
+            Debug.Log($"HandleTowerPlacement: {placeAt}");
             InstantiateTower(placeAt);
             board.SetCellBlocked(gridCoordinate.X, gridCoordinate.Y);
         }
@@ -46,6 +49,7 @@ public class GameBoardController : MonoBehaviour
 
     private void InstantiateTower(Vector3 globalPosition)
     {
+        Debug.Log($"InstantiateTower: {globalPosition}");
         GameObject tower = Instantiate(towerPrefab, globalPosition, Quaternion.identity);
     }
 
@@ -67,9 +71,9 @@ public class GameBoardController : MonoBehaviour
 
 
     // Retrurns the grid coordinates corresponding to the global Vector3 position
-    private GridCoordinate GetGridCoordinatesFromWorldPosition(Vector3 worldPosition)
+    private GridCoordinate GetGridCoordinateFromWorldPosition(Vector3 worldPosition)
     {
-        worldPosition -= gridOffset;
+        worldPosition -= offsetFromOrigin;
         int gridX = Mathf.FloorToInt(worldPosition.x);
         int gridY = Mathf.FloorToInt(worldPosition.z);
         return new GridCoordinate(gridX, gridY);
@@ -77,11 +81,8 @@ public class GameBoardController : MonoBehaviour
 
     private Vector3 GetWorldPositionFromGridCoordinates(GridCoordinate gridCoordinate)
     {
-        Vector3 worldPosition = new Vector3(
-            gridCoordinate.X,
-            transform.position.y,
-            gridCoordinate.Y)
-            + gridOffset;
+        Vector3 worldPosition = new Vector3(gridCoordinate.X, transform.position.y, gridCoordinate.Y);
+        worldPosition += offsetFromOrigin;
         return worldPosition;
     }
 }
