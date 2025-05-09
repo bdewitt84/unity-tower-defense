@@ -45,17 +45,12 @@ public class TowerPlacement : MonoBehaviour
 
     private void place_tower()
     {
-        place = _hit.point;
-        double snapToGridX = Math.Round(_hit.point.x);
-        double snapToGridY = Math.Round(_hit.point.y);
-        double snapToGridZ = Math.Round(_hit.point.z);
-        Vector3 snapToGridplace = new Vector3((float)snapToGridX, (float)snapToGridY, (float)snapToGridZ);
-        Instantiate(tower, snapToGridplace, Quaternion.identity);
-        placing = false;
+        GameEvents.TowerPlacementRequest(_hit.point);
     }
 
     private bool location_of_click_is_ground()
     {
+        // null exception when no scene object clicked?
         return _hit.transform.CompareTag("Ground");
     }
 
