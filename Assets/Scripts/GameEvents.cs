@@ -50,4 +50,8 @@ public static class GameEvents
     // PlayerHealthChanged
     public static Action<int> OnPlayerHealthChanged;
     public static void PlayerHealthChanged(int updatedPlayerHealth) => OnPlayerHealthChanged?.Invoke(updatedPlayerHealth);
+
+    // TowerPlacementRequest
+    public static Action<Vector3> OnTowerPlacementRequest;
+    public static void TowerPlacementRequest(Vector3 globalPosition) => OnTowerPlacementRequest?.Invoke(globalPosition);
 }
