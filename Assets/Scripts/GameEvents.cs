@@ -54,4 +54,8 @@ public static class GameEvents
     // TowerPlacementRequest
     public static Action<Vector3> OnTowerPlacementRequest;
     public static void TowerPlacementRequest(Vector3 globalPosition) => OnTowerPlacementRequest?.Invoke(globalPosition);
+
+    // TowerPlacementBlocked
+    public static Action<int, int> OnTowerPlacementInvalid;
+    public static void TowerPlacementInvalid(int gridX, int gridY) => OnTowerPlacementInvalid?.Invoke(gridX, gridY);
 }
