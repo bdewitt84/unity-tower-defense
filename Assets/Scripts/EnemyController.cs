@@ -37,9 +37,8 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] private Transform lane;
     [SerializeField] private List<Transform> waypoints = new();
-    [SerializeField] private int waypointIndex = 0;
     private Vector3 destination;
-    private Transform currentWaypoint;
+    [SerializeField] private PathfindingComponent pathing;
 
     [SerializeField] private float speed = 4f;
     [SerializeField] private float health = 100;
@@ -53,19 +52,13 @@ public class EnemyController : MonoBehaviour
     // MonoBehaviour is created
     private void Start()
     {
-        if (lane == null)
-        {
-            Debug.LogError("[EnemyController] Lane not assigned. Destroying self.");
-            Die();
-            return;
-        }
-
-        GetWaypointsFromLane();
+        LanePathFinder pathFindingComponent = new(this, lane);
+        SetPathfindingComponent(pathFindingComponent);
 
         string reason;
-        if (CanSetNextWaypoint(out reason))
+        if (pathing.CanSetNextWaypoint(out reason))
         {
-            SetNextWaypoint();
+            pathing.SetNextWaypoint();
         }
         else
         {
@@ -83,10 +76,10 @@ public class EnemyController : MonoBehaviour
             BroadcaseEnemyKilledEvent();
             Die();
         }
-        if (AtCurrentWaypoint())
+        if (pathing.AtCurrentWaypoint())
         {
             AlignWithWaypoint();
-            if (ReachedGoal())
+            if (pathing.ReachedGoal())
             {
                 // animation?
                 // play sounds?
@@ -96,9 +89,9 @@ public class EnemyController : MonoBehaviour
             else
             {
                 string reason;
-                if (CanSetNextWaypoint(out reason))
+                if (pathing.CanSetNextWaypoint(out reason))
                 {
-                    SetNextWaypoint();
+                    pathing.SetNextWaypoint();
                 }
                 else
                 {
@@ -153,6 +146,7 @@ public class EnemyController : MonoBehaviour
     {
         return health;
     }
+
     private void InitializeMaterial()
     {
         enemyMaterial = new Material(GetComponent<Renderer>().material);
@@ -192,50 +186,6 @@ public class EnemyController : MonoBehaviour
         //   waypoint is null
     }
 
-    // Sets the current waypoint to the next in the waypoints list, and
-    // unpacks its x and z coordinates into a destination vector for the
-    // enemy to move toward. The y coordinate is kept the same to ensure
-    // that the enemy's height does not change.
-    private void SetNextWaypoint()
-    {
-        currentWaypoint = waypoints[waypointIndex];
-        destination = new Vector3(currentWaypoint.transform.position.x,
-                                  transform.position.y,
-                                  currentWaypoint.transform.position.z);
-        waypointIndex += 1;
-
-        // Error handling could include
-        //  trying to set the next waypoint
-        //  trying to set the final waypoint,
-        //  calling HandleReachedGoal()
-        //  calling HandleLostAllHealth()
-        //  or just Die()
-    }
-
-    // Returns true if the enemy's distance to the current waypoint is within
-    // a specified margin
-    private bool AtCurrentWaypoint()
-    {
-        if (currentWaypoint == null)
-        {
-            Debug.LogWarning("[EnemyController] Current waypoint is null.");
-            return false;
-        }
-        else
-        {
-            float margin = 0.1f;
-            float distanceFromWaypoint = Vector3.Distance(transform.position,
-                                                          destination);
-            return (distanceFromWaypoint < margin);
-        }
-    }
-
-    // Returns true if the last visited waypoint was the final waypoint in the
-    // waypoints list
-    private bool ReachedGoal()
-    {
-        return (waypointIndex >= lane.childCount);
-    }
 
     // Moves towards the current waypoint
     private void MoveTowardWaypoint()
@@ -283,31 +233,21 @@ public class EnemyController : MonoBehaviour
         return health <= 0;
     }
 
-    public bool CanSetNextWaypoint(out string reason)
+
+    public void SetPathfindingComponent(PathfindingComponent component)
     {
-        reason = "";
-
-        if (waypoints == null)
-        {
-            reason = "Cannot set next waypoint. Waypoints is null.";
-            return false;
-        }
-
-        if (waypoints.Count == 0)
-        {
-            reason = "Cannot set next waypoint. Waypoints list is empty.";
-            return false;
-        }
-
-        if (waypointIndex < 0 || waypointIndex >= waypoints.Count)
-        {
-            reason = "Cannot set next waypoint. Index is out of range.";
-            return false;
-        }
-
-        return true;
+        pathing = component;
     }
 
+    public Vector3 GetDestination()
+    {
+        return destination;
+    }
+
+    public void SetDestination(Vector3 destination)
+    {
+        this.destination = destination;
+    }
 }
 
 
