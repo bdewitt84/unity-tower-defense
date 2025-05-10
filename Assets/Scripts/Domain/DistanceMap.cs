@@ -1,6 +1,4 @@
 
-using Unity.VisualScripting;
-
 public class DistanceMap : GridMap
 {
     private int[,] distances;
