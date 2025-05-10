@@ -13,20 +13,9 @@ using System.Collections;
 // Description:
 
 // Prototype for basic enemy creep.
-// Must be assigned a Lane. The Lane must have child objects which comprise the
-// waypoints of the lane. The Enemy will visit each of the waypoints in
-// sequence until all waypoints have been visited, at which point the goal
-// sequence will be triggered. If the Enemy loses all of its health, the
-// death sequence will be triggered.
-
-// To assign a lane to the Enemy, use the public function SetLane().
-// Example:
-//    GameObject enemyGO = Instantiate(enemyPrefab,
-//                                     spawnPoint.position,
-//                                     spawnPoint.rotation);
-//    EnemyController enemy = enemyGO.GetComponent<EnemyController>();
-//    enemy.SetLane(laneTransform);
-
+// Must be assigned a PathfindingComponent using the constructor or by using
+// the public method SetPathfindingComponent().
+//
 // Damage can be dealt to the enemy by using the pulblic function TakeDamage()
 // Example:
 //    EnemyController enemy = hitEnemyGameObject.GetComponent<EnemyController>();
@@ -35,8 +24,6 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField] private Transform lane;
-    [SerializeField] private List<Transform> waypoints = new();
     private Vector3 destination;
     [SerializeField] private PathfindingComponent pathing;
 
@@ -104,26 +91,6 @@ public class EnemyController : MonoBehaviour
     //
 
 
-    // Sets the lane for the enemy to follow. Children of lane will be treated
-    // as waypoints.
-    // If lane has no waypoints, enemy will be destroyed.
-    // Throws ArgumentNullException if lane is Null.
-    public void SetLane(Transform lane)
-    {
-        if (lane == null)
-        {
-            throw new ArgumentNullException("Lane must not be null");
-        }
-        this.lane = lane;
-        GetWaypointsFromLane();
-
-        if (waypoints.Count <= 0)
-        {
-            Debug.LogError("[EnemyController] Lane has no waypoints. Destroying self.");
-            Die();
-        }
-    }
-
     // Reduces enemy's health by the specified damage amount. When health falls
     // below zero, triggers the handler for losing all health.
     public void TakeDamage(float damage)
@@ -154,25 +121,6 @@ public class EnemyController : MonoBehaviour
     // Private Helper functions
     //
 
-
-    // Adds every child of lane to list of waypoints for enemy to follow.
-    // The lane must first be set with SetLane()
-    private void GetWaypointsFromLane()
-    {
-        if (lane == null)
-        {
-            Debug.Log("GetWaypointsFromLane must have non-null lane. Use" +
-                "SetLane() to assign a lane to Enemy.");
-        }
-        else
-        {
-            waypoints.Clear();
-            foreach (Transform waypoint in lane)
-            {
-                waypoints.Add(waypoint);
-            }
-        }
-    }
 
     // Sets current position to the current waypoint, making sure enemy
     // accuratey follows the path
@@ -229,7 +177,6 @@ public class EnemyController : MonoBehaviour
     {
         return health <= 0;
     }
-
 
     public void SetPathfindingComponent(PathfindingComponent component)
     {
