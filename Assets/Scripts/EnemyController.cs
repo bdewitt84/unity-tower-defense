@@ -41,15 +41,6 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         InitializeMaterial();
-        
-        if (pathing.HasMoreWaypoints())
-        {
-            pathing.SetNextWaypoint();
-        }
-        else
-        {
-            Die();
-        }
     }
 
     // Update is called once per frame
@@ -63,17 +54,12 @@ public class EnemyController : MonoBehaviour
         }
 
         // Pathing
-        if (AtCurrentWaypoint())
-        {  
-            if (pathing.HasMoreWaypoints())
-            {
-                pathing.SetNextWaypoint();
-            }
-            else
-            {
-                BroadcastEnemyReachedGoalEvent();
-                Die();
-            }
+
+        pathing.Update();
+        if (pathing.HasReachedGoal())
+        {
+            BroadcastEnemyReachedGoalEvent();
+            Die();
         }
 
         // Movement

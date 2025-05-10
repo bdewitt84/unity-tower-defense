@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LanePathFinder : PathfindingComponent
@@ -14,10 +13,21 @@ public class LanePathFinder : PathfindingComponent
     public LanePathFinder(EnemyController parent, Transform lane) : base(parent)
     {
         SetLane(lane);
-        // SetNextWaypoint();
+        SetNextWaypoint();
     }
 
-    override public bool AtCurrentWaypoint()
+    override public void Update()
+    {
+        if (AtCurrentWaypoint())
+        {
+            if (HasMoreWaypoints())
+            {
+                SetNextWaypoint();
+            }
+        }
+    }
+
+     public bool AtCurrentWaypoint()
     {
 
         float margin = 0.1f;
@@ -29,16 +39,16 @@ public class LanePathFinder : PathfindingComponent
 
     // Returns true if the last visited waypoint was the final waypoint in the
     // waypoints list
-    override public bool ReachedGoal()
+    override public bool HasReachedGoal()
     {
-        return (waypointIndex >= lane.childCount);
+        return !HasMoreWaypoints() && AtCurrentWaypoint();
     }
 
     // Sets the current waypoint to the next in the waypoints list, and
     // unpacks its x and z coordinates into a destination vector for the
     // enemy to move toward. The y coordinate is kept the same to ensure
     // that the enemy's height does not change.
-    override public void SetNextWaypoint()
+    public void SetNextWaypoint()
     {
         // Get next from list
         currentWaypoint = waypoints[waypointIndex];
@@ -54,7 +64,7 @@ public class LanePathFinder : PathfindingComponent
         waypointIndex += 1;
     }
 
-    override public bool HasMoreWaypoints()
+    public bool HasMoreWaypoints()
     {
         return waypointIndex < waypoints.Count;
     }
@@ -93,7 +103,7 @@ public class LanePathFinder : PathfindingComponent
         }
     }
 
-    public override Vector3 GetCurrentWaypointPosition()
+    override public Vector3 GetCurrentWaypointPosition()
     {
         return currentWaypoint.position;
     }

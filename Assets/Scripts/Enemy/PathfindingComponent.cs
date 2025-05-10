@@ -9,14 +9,15 @@ public abstract class PathfindingComponent
     {
         this.parent = parent;
     }
+    abstract public void Update();
 
-    abstract public bool AtCurrentWaypoint();
+    // abstract public bool AtCurrentWaypoint();
 
-    abstract public bool ReachedGoal();
+    abstract public bool HasReachedGoal();
 
-    abstract public bool HasMoreWaypoints();
+    // abstract public bool HasMoreWaypoints();
 
-    abstract public void SetNextWaypoint();
+    // abstract public void SetNextWaypoint();
 
     abstract public Vector3 GetCurrentWaypointPosition();
 }
