@@ -84,7 +84,7 @@ public class EnemyController : MonoBehaviour
         if (AtCurrentWaypoint())
         {
             AlignWithWaypoint();
-            if (VisitedAllWaypoints())
+            if (ReachedGoal())
             {
                 // animation?
                 // play sounds?
@@ -243,7 +243,7 @@ public class EnemyController : MonoBehaviour
 
     // Returns true if the last visited waypoint was the final waypoint in the
     // waypoints list
-    private bool VisitedAllWaypoints()
+    private bool ReachedGoal()
     {
         return (waypointIndex >= lane.childCount);
     }
