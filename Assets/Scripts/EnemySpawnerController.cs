@@ -136,6 +136,8 @@ public class EnemySpawnerController : MonoBehaviour
             GameObject enemyObject = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
             enemyObject.SetActive(false);
             EnemyController enemyController = enemyObject.GetComponent<EnemyController>();
+            LanePathFinder lanePathFinder = new(enemyController, lane);
+            enemyController.SetPathfindingComponent(lanePathFinder);
             enemyController.SetLane(lane);
             enemyObject.transform.position = spawnPoint.position;
             wave.Enqueue(enemyObject);
