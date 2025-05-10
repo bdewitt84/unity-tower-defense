@@ -138,7 +138,6 @@ public class EnemySpawnerController : MonoBehaviour
             EnemyController enemyController = enemyObject.GetComponent<EnemyController>();
             LanePathFinder lanePathFinder = new(enemyController, lane);
             enemyController.SetPathfindingComponent(lanePathFinder);
-            enemyController.SetLane(lane);
             enemyObject.transform.position = spawnPoint.position;
             wave.Enqueue(enemyObject);
         }
