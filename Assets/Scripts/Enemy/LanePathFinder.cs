@@ -9,6 +9,7 @@ public class LanePathFinder : PathfindingComponent
     private int waypointIndex = 0;
     private Transform currentWaypoint;
 
+
     public LanePathFinder(EnemyController parent, Transform lane) : base(parent)
     {
         SetLane(lane);
@@ -26,7 +27,7 @@ public class LanePathFinder : PathfindingComponent
         {
             float margin = 0.1f;
             float distanceFromWaypoint = Vector3.Distance(parent.transform.position,
-                                                          parent.GetDestination());
+                                                          currentWaypoint.position);
             return (distanceFromWaypoint < margin);
         }
     }
@@ -45,21 +46,18 @@ public class LanePathFinder : PathfindingComponent
     // that the enemy's height does not change.
     override public void SetNextWaypoint()
     {
-
-
+        // Get next from list
         currentWaypoint = waypoints[waypointIndex];
-        destination = new Vector3(currentWaypoint.transform.position.x,
+
+        // Normalize height
+        currentWaypoint.position = new Vector3(currentWaypoint.transform.position.x,
                                   parent.transform.position.y,
                                   currentWaypoint.transform.position.z);
-        parent.SetDestination(destination);
-        waypointIndex += 1;
 
-        // Error handling could include
-        //  trying to set the next waypoint
-        //  trying to set the final waypoint,
-        //  calling HandleReachedGoal()
-        //  calling HandleLostAllHealth()
-        //  or just Die()
+        Debug.Log($"CurrentWaypointPosition: {currentWaypoint.position}");
+
+        // Advance index
+        waypointIndex += 1;
     }
 
     override public bool CanSetNextWaypoint(out string reason)

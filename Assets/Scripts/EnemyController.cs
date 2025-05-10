@@ -43,6 +43,7 @@ public class EnemyController : MonoBehaviour
         if (pathing.CanSetNextWaypoint(out reason))
         {
             pathing.SetNextWaypoint();
+            destination = pathing.GetCurrentWaypointPosition();
         }
         else
         {
@@ -55,27 +56,33 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Health/body
         if (OutOfHealth())
         {
             BroadcaseEnemyKilledEvent();
             Die();
         }
+
+        // pathing
         if (pathing.AtCurrentWaypoint())
         {
+            // movement?
             AlignWithWaypoint();
+            // pathing
             if (pathing.ReachedGoal())
             {
-                // animation?
-                // play sounds?
                 BroadcastEnemyReachedGoalEvent();
                 Die();
             }
             else
             {
+                // pathing
                 string reason;
                 if (pathing.CanSetNextWaypoint(out reason))
                 {
+                    // pathing
                     pathing.SetNextWaypoint();
+                    destination = pathing.GetCurrentWaypointPosition();
                 }
                 else
                 {
@@ -83,7 +90,9 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-        MoveTowardWaypoint();
+        // movement
+        // MoveTowardWaypoint();
+        MoveTowards(destination);
     }
 
     //
@@ -134,6 +143,14 @@ public class EnemyController : MonoBehaviour
 
     // Moves towards the current waypoint
     private void MoveTowardWaypoint()
+    {
+        Vector3 moveTowards = Vector3.MoveTowards(transform.position,
+                                                  destination,
+                                                  speed * Time.deltaTime);
+        transform.position = moveTowards;
+    }
+
+    private void MoveTowards(Vector3 destination)
     {
         Vector3 moveTowards = Vector3.MoveTowards(transform.position,
                                                   destination,
