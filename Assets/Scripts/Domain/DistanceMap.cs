@@ -21,13 +21,13 @@ public class DistanceMap : GridMap
         return distances[gridCoordinate.X, gridCoordinate.Y];
     }
 
-    public void Reset()
+    public void Reset(int resetValue = -1)
     {
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                distances[i, j] = maxValue;
+                distances[i, j] = resetValue;
             }
         }
     }
