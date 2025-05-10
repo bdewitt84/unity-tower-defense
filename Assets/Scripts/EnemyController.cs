@@ -24,7 +24,6 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
-    private Vector3 destination;
     [SerializeField] private PathfindingComponent pathing;
 
     [SerializeField] private float speed = 4f;
@@ -43,7 +42,7 @@ public class EnemyController : MonoBehaviour
         if (pathing.CanSetNextWaypoint(out reason))
         {
             pathing.SetNextWaypoint();
-            destination = pathing.GetCurrentWaypointPosition();
+            // destination = pathing.GetCurrentWaypointPosition();
         }
         else
         {
@@ -82,7 +81,7 @@ public class EnemyController : MonoBehaviour
                 {
                     // pathing
                     pathing.SetNextWaypoint();
-                    destination = pathing.GetCurrentWaypointPosition();
+                    // destination = pathing.GetCurrentWaypointPosition();
                 }
                 else
                 {
@@ -91,8 +90,7 @@ public class EnemyController : MonoBehaviour
             }
         }
         // movement
-        // MoveTowardWaypoint();
-        MoveTowards(destination);
+        MoveTowards(pathing.GetCurrentWaypointPosition());
     }
 
     //
@@ -135,20 +133,11 @@ public class EnemyController : MonoBehaviour
     // accuratey follows the path
     private void AlignWithWaypoint()
     {
-        transform.position = destination;
+        transform.position = pathing.GetCurrentWaypointPosition();
         // Handle cases
         //   waypoint is null
     }
 
-
-    // Moves towards the current waypoint
-    private void MoveTowardWaypoint()
-    {
-        Vector3 moveTowards = Vector3.MoveTowards(transform.position,
-                                                  destination,
-                                                  speed * Time.deltaTime);
-        transform.position = moveTowards;
-    }
 
     private void MoveTowards(Vector3 destination)
     {
@@ -200,15 +189,6 @@ public class EnemyController : MonoBehaviour
         pathing = component;
     }
 
-    public Vector3 GetDestination()
-    {
-        return destination;
-    }
-
-    public void SetDestination(Vector3 destination)
-    {
-        this.destination = destination;
-    }
 }
 
 
