@@ -17,4 +17,6 @@ public abstract class PathfindingComponent
     abstract public bool CanSetNextWaypoint(out string reason);
 
     abstract public void SetNextWaypoint();
+
+    abstract public Vector3 GetCurrentWaypointPosition();
 }

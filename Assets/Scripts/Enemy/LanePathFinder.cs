@@ -121,4 +121,9 @@ public class LanePathFinder : PathfindingComponent
             Debug.LogError("[EnemyController] Lane has no waypoints. Destroying self.");
         }
     }
+
+    public override Vector3 GetCurrentWaypointPosition()
+    {
+        return currentWaypoint.position;
+    }
 }
