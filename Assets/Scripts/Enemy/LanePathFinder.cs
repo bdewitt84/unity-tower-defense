@@ -8,22 +8,21 @@ public class LanePathFinder : PathfindingComponent
     private List<Transform> waypoints = new();
     private int waypointIndex = 0;
     private Transform currentWaypoint;
+    private EnemyController parent;
 
 
-    public LanePathFinder(EnemyController parent, Transform lane) : base(parent)
+    public LanePathFinder(EnemyController parent, Transform lane)
     {
+        this.parent = parent;
         SetLane(lane);
         SetNextWaypoint();
     }
 
-    override public void Update()
+    public void Update()
     {
-        if (AtCurrentWaypoint())
+        if (AtCurrentWaypoint() && HasMoreWaypoints())
         {
-            if (HasMoreWaypoints())
-            {
-                SetNextWaypoint();
-            }
+            SetNextWaypoint();
         }
     }
 
@@ -39,7 +38,7 @@ public class LanePathFinder : PathfindingComponent
 
     // Returns true if the last visited waypoint was the final waypoint in the
     // waypoints list
-    override public bool HasReachedGoal()
+    public bool HasReachedGoal()
     {
         return !HasMoreWaypoints() && AtCurrentWaypoint();
     }
@@ -103,7 +102,7 @@ public class LanePathFinder : PathfindingComponent
         }
     }
 
-    override public Vector3 GetCurrentWaypointPosition()
+    public Vector3 GetCurrentWaypointPosition()
     {
         return currentWaypoint.position;
     }
