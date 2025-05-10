@@ -30,6 +30,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float health = 100;
 
     private Material enemyMaterial;
+    Color originalColor;
+
     [SerializeField] private Color hitFlashColor = Color.red; // Color when hit
     [SerializeField] private float hitFlashDuration = 0.5f; // Total time for flashing
 
@@ -38,6 +40,9 @@ public class EnemyController : MonoBehaviour
     // MonoBehaviour is created
     private void Start()
     {
+        InitializeMaterial();
+        
+
         string reason;
         if (pathing.CanSetNextWaypoint(out reason))
         {
@@ -49,7 +54,7 @@ public class EnemyController : MonoBehaviour
             Die();
         }
         
-        InitializeMaterial();
+        
     }
 
     // Update is called once per frame
@@ -122,6 +127,7 @@ public class EnemyController : MonoBehaviour
     {
         enemyMaterial = new Material(GetComponent<Renderer>().material);
         GetComponent<Renderer>().material = enemyMaterial;
+        originalColor = enemyMaterial.color;
     }
 
     //
@@ -157,7 +163,7 @@ public class EnemyController : MonoBehaviour
     private IEnumerator FlashEnemy()
     {
         // Store the original color of the material
-        Color originalColor = enemyMaterial.color;
+        // Color originalColor = enemyMaterial.color;
 
         // Change to the flash color (red)
         enemyMaterial.color = hitFlashColor;
