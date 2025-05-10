@@ -16,6 +16,11 @@ public class DistanceMap : GridMap
         distances[gridCoordinate.X, gridCoordinate.Y] = distance;
     }
 
+    public void SetMaxDistance(GridCoordinate gridCoordinate)
+    {
+        distances[gridCoordinate.X, gridCoordinate.Y] = maxValue;
+    }
+
     public int GetDistance(GridCoordinate gridCoordinate)
     {
         return distances[gridCoordinate.X, gridCoordinate.Y];
