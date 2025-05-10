@@ -294,6 +294,31 @@ public class EnemyController : MonoBehaviour
         return health <= 0;
     }
 
+    public bool CanSetNextWaypoint(out string reason)
+    {
+        reason = "";
+
+        if (waypoints == null)
+        {
+            reason = "Cannot set next waypoint. Waypoints is null.";
+            return false;
+        }
+
+        if (waypoints.Count == 0)
+        {
+            reason = "Cannot set next waypoint. Waypoints list is empty.";
+            return false;
+        }
+
+        if (waypointIndex < 0 || waypointIndex >= waypoints.Count)
+        {
+            reason = "Cannot set next waypoint. Index is out of range.";
+            return false;
+        }
+
+        return true;
+    }
+
 }
 
 
