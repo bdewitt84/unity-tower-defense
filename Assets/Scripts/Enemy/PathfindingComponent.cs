@@ -14,7 +14,7 @@ public abstract class PathfindingComponent
 
     abstract public bool ReachedGoal();
 
-    abstract public bool CanSetNextWaypoint(out string reason);
+    abstract public bool HasMoreWaypoints();
 
     abstract public void SetNextWaypoint();
 

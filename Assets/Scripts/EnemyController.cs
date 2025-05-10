@@ -42,60 +42,47 @@ public class EnemyController : MonoBehaviour
     {
         InitializeMaterial();
         
-
-        string reason;
-        if (pathing.CanSetNextWaypoint(out reason))
+        if (pathing.HasMoreWaypoints())
         {
             pathing.SetNextWaypoint();
-            // destination = pathing.GetCurrentWaypointPosition();
         }
         else
         {
             Die();
         }
-        
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Health/body
+        // Health
         if (OutOfHealth())
         {
-            BroadcaseEnemyKilledEvent();
+            BroadcastEnemyKilledEvent();
             Die();
         }
 
-        // pathing
-        if (pathing.AtCurrentWaypoint())
-        {
-            // movement?
-            AlignWithWaypoint();
-            // pathing
-            if (pathing.ReachedGoal())
+        // Pathing
+        if (AtCurrentWaypoint())
+        {  
+            if (pathing.HasMoreWaypoints())
+            {
+                pathing.SetNextWaypoint();
+            }
+            else
             {
                 BroadcastEnemyReachedGoalEvent();
                 Die();
             }
-            else
-            {
-                // pathing
-                string reason;
-                if (pathing.CanSetNextWaypoint(out reason))
-                {
-                    // pathing
-                    pathing.SetNextWaypoint();
-                    // destination = pathing.GetCurrentWaypointPosition();
-                }
-                else
-                {
-                    Die();
-                }
-            }
         }
-        // movement
-        MoveTowards(pathing.GetCurrentWaypointPosition());
+
+        // Movement
+        Vector3 destination = pathing.GetCurrentWaypointPosition();
+        MoveTowards(destination);
+        if (AtPosition(destination))
+        {
+            AlignWithPosition(destination);
+        }
     }
 
     //
@@ -133,7 +120,21 @@ public class EnemyController : MonoBehaviour
     //
     // Private Helper functions
     //
+    public bool AtCurrentWaypoint()
+    {
+        float margin = 0.1f;
+        float distanceFromWaypoint = Vector3.Distance(transform.position,
+                                                        pathing.GetCurrentWaypointPosition());
+        return (distanceFromWaypoint < margin);
+    }
 
+    public bool AtPosition(Vector3 position)
+    {
+        float margin = 0.1f;
+        float distanceFromWaypoint = Vector3.Distance(transform.position,
+                                                        position);
+        return (distanceFromWaypoint < margin);
+    }
 
     // Sets current position to the current waypoint, making sure enemy
     // accuratey follows the path
@@ -142,6 +143,11 @@ public class EnemyController : MonoBehaviour
         transform.position = pathing.GetCurrentWaypointPosition();
         // Handle cases
         //   waypoint is null
+    }
+
+    private void AlignWithPosition(Vector3 position)
+    {
+        transform.position = position;
     }
 
 
@@ -180,7 +186,7 @@ public class EnemyController : MonoBehaviour
         GameEvents.EnemyReachedGoal(this);
     }
 
-    private void BroadcaseEnemyKilledEvent()
+    private void BroadcastEnemyKilledEvent()
     {
         GameEvents.EnemyKilled(this);
     }

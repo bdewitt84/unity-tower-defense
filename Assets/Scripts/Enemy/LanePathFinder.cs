@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LanePathFinder : PathfindingComponent
@@ -13,25 +14,18 @@ public class LanePathFinder : PathfindingComponent
     public LanePathFinder(EnemyController parent, Transform lane) : base(parent)
     {
         SetLane(lane);
-        SetNextWaypoint();
+        // SetNextWaypoint();
     }
 
     override public bool AtCurrentWaypoint()
     {
-        if (currentWaypoint == null)
-        {
-            Debug.LogWarning("[EnemyController] Current waypoint is null.");
-            return false;
-        }
-        else
-        {
-            float margin = 0.1f;
-            float distanceFromWaypoint = Vector3.Distance(parent.transform.position,
-                                                          currentWaypoint.position);
-            return (distanceFromWaypoint < margin);
-        }
-    }
 
+        float margin = 0.1f;
+        float distanceFromWaypoint = Vector3.Distance(parent.transform.position,
+                                                        currentWaypoint.position);
+        return (distanceFromWaypoint < margin);
+
+    }
 
     // Returns true if the last visited waypoint was the final waypoint in the
     // waypoints list
@@ -60,29 +54,9 @@ public class LanePathFinder : PathfindingComponent
         waypointIndex += 1;
     }
 
-    override public bool CanSetNextWaypoint(out string reason)
+    override public bool HasMoreWaypoints()
     {
-        reason = "";
-
-        if (waypoints == null)
-        {
-            reason = "Cannot set next waypoint. Waypoints is null.";
-            return false;
-        }
-
-        if (waypoints.Count == 0)
-        {
-            reason = "Cannot set next waypoint. Waypoints list is empty.";
-            return false;
-        }
-
-        if (waypointIndex < 0 || waypointIndex >= waypoints.Count)
-        {
-            reason = "Cannot set next waypoint. Index is out of range.";
-            return false;
-        }
-
-        return true;
+        return waypointIndex < waypoints.Count;
     }
 
     // Adds every child of lane to list of waypoints for enemy to follow.
@@ -103,7 +77,6 @@ public class LanePathFinder : PathfindingComponent
             }
         }
     }
-
     public void SetLane(Transform lane)
     {
         if (lane == null)
