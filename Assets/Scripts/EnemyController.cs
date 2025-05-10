@@ -52,9 +52,6 @@ public class EnemyController : MonoBehaviour
     // MonoBehaviour is created
     private void Start()
     {
-        LanePathFinder pathFindingComponent = new(this, lane);
-        SetPathfindingComponent(pathFindingComponent);
-
         string reason;
         if (pathing.CanSetNextWaypoint(out reason))
         {
