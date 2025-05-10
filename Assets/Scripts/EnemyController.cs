@@ -62,14 +62,16 @@ public class EnemyController : MonoBehaviour
 
         GetWaypointsFromLane();
 
-        if (waypoints.Count == 0)
+        string reason;
+        if (CanSetNextWaypoint(out reason))
         {
-            Debug.LogError("[EnemyController] No waypoints found in lane. Destroying self.");
-            Die();
-            return;
+            SetNextWaypoint();
         }
-
-        SetNextWaypoint();
+        else
+        {
+            Die();
+        }
+        
         InitializeMaterial();
     }
 
@@ -93,7 +95,15 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                SetNextWaypoint();
+                string reason;
+                if (CanSetNextWaypoint(out reason))
+                {
+                    SetNextWaypoint();
+                }
+                else
+                {
+                    Die();
+                }
             }
         }
         MoveTowardWaypoint();
@@ -188,27 +198,6 @@ public class EnemyController : MonoBehaviour
     // that the enemy's height does not change.
     private void SetNextWaypoint()
     {
-        if (waypoints == null)
-        {
-            Debug.Log("Cannot set next waypoint. Waypoints is null.");
-            Die();
-            return;
-        }
-
-        if (waypoints.Count == 0)
-        {
-            Debug.Log("Cannot set next waypoint. Waypoints list is empty.");
-            Die();
-            return;
-        }
-
-        if (waypointIndex < 0 || waypointIndex >= waypoints.Count)
-        {
-            Debug.Log("Cannt set next waypoint. Index is out of range.");
-            Die();
-            return;
-        }
-
         currentWaypoint = waypoints[waypointIndex];
         destination = new Vector3(currentWaypoint.transform.position.x,
                                   transform.position.y,
