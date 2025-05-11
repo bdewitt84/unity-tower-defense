@@ -58,4 +58,16 @@ public static class GameEvents
     // TowerPlacementBlocked
     public static Action<int, int> OnTowerPlacementInvalid;
     public static void TowerPlacementInvalid(int gridX, int gridY) => OnTowerPlacementInvalid?.Invoke(gridX, gridY);
+
+    // TowerPlacementSuccess
+    public static Action<TowerController> OnTowerPlacementSuccess;
+    public static void TowerPlacementSuccess(TowerController tower) => OnTowerPlacementSuccess?.Invoke(tower);
+
+    // Game Over
+    public static Action OnGameOver;
+    public static void GameOver() => OnGameOver?.Invoke();
+
+    // Game Clear
+    public static Action OnGameClear;
+    public static void GameClear() => OnGameClear?.Invoke();
 }

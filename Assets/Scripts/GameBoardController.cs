@@ -35,8 +35,10 @@ public class GameBoardController : MonoBehaviour
             Vector3 placeAt = GetWorldPositionFromGridCoordinates(gridCoordinate);
             Vector3 towerOffset = new Vector3(0.5f, 0.0f, 0.5f);
             placeAt += towerOffset;
-            InstantiateTower(placeAt);
+            GameObject towerObject = InstantiateTower(placeAt);
+            TowerController towerController = towerObject.GetComponent<TowerController>();
             board.SetCellBlocked(gridCoordinate.X, gridCoordinate.Y);
+            GameEvents.TowerPlacementSuccess(towerController);
         }
         else
         {
@@ -45,13 +47,33 @@ public class GameBoardController : MonoBehaviour
         }
     }
 
-
-    private void InstantiateTower(Vector3 globalPosition)
+    public void PlaceTower(Vector3 globalPosition, TowerController tower)
     {
-        GameObject tower = Instantiate(towerPrefab, globalPosition, Quaternion.identity);
+        GridCoordinate cell = GetGridCoordinateFromWorldPosition(globalPosition);
+        globalPosition = GetWorldPositionFromGridCoordinates(cell);
+        Vector3 towerOffset = new Vector3(0.5f, 0.0f, 0.5f);
+        globalPosition += towerOffset;
+        GameObject towerObject = InstantiateTower(globalPosition);
+        TowerController towerController = towerObject.GetComponent<TowerController>();
+
+        board.SetCellBlocked(cell.X, cell.Y);
+        GameEvents.TowerPlacementSuccess(towerController);
     }
 
-    private bool CanPlaceTower(GridCoordinate gridCoordinate, out string reason)
+
+    private GameObject InstantiateTower(Vector3 globalPosition)
+    {
+        GameObject tower = Instantiate(towerPrefab, globalPosition, Quaternion.identity);
+        return tower;
+    }
+
+    public bool CanPlaceTower(Vector3 worldPosition, out string reason)
+    {
+        GridCoordinate cell = GetGridCoordinateFromWorldPosition(worldPosition);
+        return CanPlaceTower(cell, out reason);
+    }
+
+    public bool CanPlaceTower(GridCoordinate gridCoordinate, out string reason)
     {
         if (!board.IsWithinBounds(gridCoordinate.X, gridCoordinate.Y))
         {

@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,14 +13,32 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text playerHealthText;
     [SerializeField] private TMP_Text playerGoldText;
+    [SerializeField] private TMP_Text gameClearText;
+    [SerializeField] private TMP_Text gameOverText;
+
 
     //
     // Subscribe to GameEvents events in start()
     //
-    void Start()
+    private void OnEnable()
     {
         GameEvents.OnPlayerHealthChanged += HandlePlayerHealthChanged;
         GameEvents.OnPlayerGoldChanged += HandlePlayerGoldChanged;
+        GameEvents.OnGameClear += HandleGameClear;
+        GameEvents.OnGameOver += HandleGameOver;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnPlayerHealthChanged -= HandlePlayerHealthChanged;
+        GameEvents.OnPlayerGoldChanged -= HandlePlayerGoldChanged;
+        GameEvents.OnGameClear -= HandleGameClear;
+        GameEvents.OnGameOver -= HandleGameOver;
+    }
+
+    void Start()
+    {
+        
     }
 
     //
@@ -34,4 +53,15 @@ public class UIManager : MonoBehaviour
     {
         playerGoldText.text = "Gold: " + updatedGold.ToString();
     }
+
+    private void HandleGameOver()
+    {
+        gameOverText.gameObject.SetActive(true);
+    }
+
+    private void HandleGameClear()
+    {
+        gameClearText.gameObject.SetActive(true);
+    }
+
 }

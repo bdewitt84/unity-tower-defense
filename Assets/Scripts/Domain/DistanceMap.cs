@@ -3,10 +3,14 @@ public class DistanceMap : GridMap
 {
     private int[,] distances;
     private const int maxValue = int.MaxValue;
+    public readonly GridCoordinate startCell;
+    public readonly GridCoordinate goalCell;
 
-    public DistanceMap(int width, int height) : base(width, height)
+    public DistanceMap(int width, int height, GridCoordinate startCell, GridCoordinate goalCell) : base(width, height)
     {
         distances = new int[width, height];
+        this.startCell = startCell;
+        this.goalCell = goalCell;
     }
 
     public void SetDistance(GridCoordinate gridCoordinate, int distance)

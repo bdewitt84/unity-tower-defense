@@ -56,7 +56,7 @@ public class EnemySpawnerController : MonoBehaviour
             {
                 if (AllWavesCleared())
                 {
-                    // send end game event
+                    GameEvents.GameClear();
                 } else
                 {
                     InitializeWave();
@@ -130,6 +130,7 @@ public class EnemySpawnerController : MonoBehaviour
         WaveData currentWaveData = waves[waveIndex];
         spawnInterval = currentWaveData.spawnInterval;
         waveSize = currentWaveData.enemyCount;
+        waveInterval = currentWaveData.spawnDelay;
 
         for(int i = 0; i < waveSize; i++)
         {

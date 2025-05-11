@@ -32,8 +32,27 @@ public class EnemyController : MonoBehaviour
     private Material enemyMaterial;
     Color originalColor;
 
+
+    private Renderer[] enemyRenderers;
+    private List<Material> enemyMaterials = new();
+    private List<Color> originalColors = new();
+
     [SerializeField] private Color hitFlashColor = Color.red; // Color when hit
-    [SerializeField] private float hitFlashDuration = 0.5f; // Total time for flashing
+    [SerializeField] private float hitFlashDuration = 0.1f; // Total time for flashing
+
+
+    private void OnEnable()
+    {
+        GameEvents.OnGameOver += HandleGameOver;
+        GameEvents.OnGameClear += HandleStageClear;
+    }
+
+
+    private void OnDisable()
+    {
+        GameEvents.OnGameOver -= HandleGameOver;
+        GameEvents.OnGameClear -= HandleStageClear;
+    }
 
 
     // Start is called once before the first execution of Update after the
@@ -98,10 +117,17 @@ public class EnemyController : MonoBehaviour
 
     private void InitializeMaterial()
     {
-        enemyMaterial = new Material(GetComponent<Renderer>().material);
-        GetComponent<Renderer>().material = enemyMaterial;
-        originalColor = enemyMaterial.color;
+        enemyRenderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in enemyRenderers)
+        {
+            // Clone each material so changes don't affect shared material
+            Material clonedMat = new Material(renderer.material);
+            renderer.material = clonedMat;
+            enemyMaterials.Add(clonedMat);
+            originalColors.Add(clonedMat.color);
+        }
     }
+
 
     //
     // Private Helper functions
@@ -154,18 +180,19 @@ public class EnemyController : MonoBehaviour
     // Flashes when hit
     private IEnumerator FlashEnemy()
     {
-        // Store the original color of the material
-        // Color originalColor = enemyMaterial.color;
+        for (int i = 0; i < enemyMaterials.Count; i++)
+        {
+            enemyMaterials[i].color = hitFlashColor;
+        }
 
-        // Change to the flash color (red)
-        enemyMaterial.color = hitFlashColor;
-
-        // Wait for the specified duration
         yield return new WaitForSeconds(hitFlashDuration);
 
-        // Revert back to the original color
-        enemyMaterial.color = originalColor;
+        for (int i = 0; i < enemyMaterials.Count; i++)
+        {
+            enemyMaterials[i].color = originalColors[i];
+        }
     }
+
 
     private void BroadcastEnemyReachedGoalEvent()
     {
@@ -187,6 +214,15 @@ public class EnemyController : MonoBehaviour
         pathing = component;
     }
 
+    private void HandleStageClear()
+    {
+        Die();
+    }
+
+    private void HandleGameOver()
+    {
+        Die();
+    }
 }
 
 

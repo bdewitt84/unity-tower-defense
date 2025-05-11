@@ -15,7 +15,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private int playerHealth;
     [SerializeField] private int playerGold;
     [SerializeField] private int playerHealthStart = 100;
-    [SerializeField] private int playerGoldStart = 30;
+    [SerializeField] private int playerGoldStart = 50;
 
     private void Start()
     {
@@ -29,6 +29,7 @@ public class GameStateManager : MonoBehaviour
     {
         GameEvents.OnEnemyKilled += HandleEnemyKilled;
         GameEvents.OnEnemyReachedGoal += HandleEnemyReachedGoal;
+        GameEvents.OnTowerPlacementSuccess += HandleTowerPlacementSuccess;
     }
 
 
@@ -36,12 +37,18 @@ public class GameStateManager : MonoBehaviour
     {
         GameEvents.OnEnemyKilled -= HandleEnemyKilled;
         GameEvents.OnEnemyReachedGoal -= HandleEnemyReachedGoal;
+        GameEvents.OnTowerPlacementSuccess -= HandleTowerPlacementSuccess;
+
     }
 
     private void HandleEnemyReachedGoal(EnemyController enemy)
     {
         playerHealth -= 5;
         GameEvents.PlayerHealthChanged(playerHealth);
+        if (playerHealth <= 0)
+        {
+            GameEvents.GameOver();
+        }
     }
 
     private void HandleEnemyKilled(EnemyController enemy)
@@ -50,4 +57,22 @@ public class GameStateManager : MonoBehaviour
         GameEvents.PlayerGoldChanged(playerGold);
     }
 
+    private void HandleTowerPlacementSuccess(TowerController tower)
+    {
+        int cost = tower.GetCost();
+        if (playerGold >= cost)
+        {
+            playerGold -= cost;
+            GameEvents.PlayerGoldChanged(playerGold);
+        }
+        else
+        {
+            Destroy(tower.gameObject);
+        }
+    }
+
+    public int GetPlayerGold()
+    {
+        return playerGold;
+    }
 }

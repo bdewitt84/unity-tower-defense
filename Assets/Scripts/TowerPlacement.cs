@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 // Author: Dante Borden
 //
@@ -19,14 +17,20 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class TowerPlacement : MonoBehaviour
 {
-    public Vector3 place;
-    public GameObject tower;
+    private Vector3 place;
+    public GameObject towerPlacementCoordinator;
+    private TowerPlacementCoordinator TPCController;
+    public GameObject towerPrefab;
 
     private RaycastHit _hit;
 
     public bool placing;
     private Ray ray;
 
+    private void Start()
+    {
+        TPCController = towerPlacementCoordinator.GetComponent<TowerPlacementCoordinator>();
+    }
 
     private void Update()
     {
@@ -45,7 +49,8 @@ public class TowerPlacement : MonoBehaviour
 
     private void place_tower()
     {
-        GameEvents.TowerPlacementRequest(_hit.point);
+        TowerController tower = towerPrefab.GetComponent<TowerController>();
+        TPCController.TryPlaceTower(_hit.point, tower);
     }
 
     private bool location_of_click_is_ground()

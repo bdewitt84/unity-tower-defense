@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AudioManager
+public class AudioManager : MonoBehaviour
 {
 
     private void OnEnable()

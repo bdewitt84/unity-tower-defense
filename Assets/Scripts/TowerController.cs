@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 /// Author: Brett DeWitt, Minsu Kim
@@ -13,7 +14,7 @@ using System.Collections;
 /// Handles targeting, firing, and cooldown
 
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class TowerController : MonoBehaviour
 {
     private EnemyController currentTarget;
     [SerializeField] private float maxRange = 6f;
@@ -21,32 +22,31 @@ public class NewMonoBehaviourScript : MonoBehaviour
     private float currentCooldown = 0f;
     [SerializeField] private float maxCooldown = 2f;
 
-    private Material towerMaterial; // The material of the tower
-    [SerializeField] private Color fireFlashColor = Color.blue; // Color when firing
-    [SerializeField] private float fireFlashDuration = 0.3f; // Flash duration
+    [SerializeField] private Color fireFlashColor = Color.blue;
+    [SerializeField] private float fireFlashDuration = 0.1f;
+    [SerializeField] private int cost = 10;
 
-    private bool isFlashing = false; // To prevent multiple flashes running simultaneously
+    private bool isFlashing = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private Renderer[] towerRenderers;
+    private List<Material> towerMaterials = new();
+    private List<Color> originalColors = new();
+
     void Start()
     {
-        Renderer renderer = GetComponent<Renderer>();
-        if (renderer == null)
-        {
-            Debug.LogError("Tower has no Renderer component!");
-            return;
-        }
-
-        if (renderer.material == null)
-        {
-            Debug.LogError("Tower's Renderer has no material assigned!");
-            return;
-        }
-
-        towerMaterial = renderer.material;
+        InitializeMaterials();
     }
 
-    // Update is called once per frame
+    private void OnEnable()
+    {
+        GameEvents.OnGameOver += HandleGameOver;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnGameOver -= HandleGameOver;
+    }
+
     void Update()
     {
         if (HasTarget() && TargetIsInRange())
@@ -66,19 +66,15 @@ public class NewMonoBehaviourScript : MonoBehaviour
         }
     }
 
-    // Checks if the tower currently has a target
-    private bool HasTarget()
+    public int GetCost()
     {
-        return (currentTarget != null);
+        return cost;
     }
 
-    // Checks if the weapon cooldown has expired
-    private bool WeaponIsReady()
-    {
-        return (currentCooldown <= 0);
-    }
+    private bool HasTarget() => currentTarget != null;
 
-    // Checks if the target is within the tower's attack range.
+    private bool WeaponIsReady() => currentCooldown <= 0;
+
     private bool TargetIsInRange()
     {
         if (currentTarget == null) return false;
@@ -86,7 +82,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
         return targetDistance < maxRange;
     }
 
-    // Attacks the target, applies damage, and triggers the flash effect
     private void FireAtTarget()
     {
         if (currentTarget != null)
@@ -100,11 +95,9 @@ public class NewMonoBehaviourScript : MonoBehaviour
         }
     }
 
-    // Searches for a new target within range if no target is found or current target is lost
     private void TryToFindNewTarget()
     {
         EnemyController[] enemies = GameObject.FindObjectsByType<EnemyController>(FindObjectsSortMode.None);
-
         foreach (EnemyController enemy in enemies)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
@@ -116,21 +109,44 @@ public class NewMonoBehaviourScript : MonoBehaviour
         }
     }
 
-    // Reduces the cooldown timer over time
     private void CoolDownWeapon()
     {
         currentCooldown -= Time.deltaTime;
     }
 
-    // Flashes when firing
+    private void InitializeMaterials()
+    {
+        towerRenderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in towerRenderers)
+        {
+            Material clonedMat = new Material(renderer.material);
+            renderer.material = clonedMat;
+            towerMaterials.Add(clonedMat);
+            originalColors.Add(clonedMat.color);
+        }
+    }
+
     private IEnumerator FlashTower()
     {
-        // Set the flag to prevent overlapping flashes
         isFlashing = true;
-        Color originalColor = towerMaterial.color;
-        towerMaterial.color = fireFlashColor;
+
+        for (int i = 0; i < towerMaterials.Count; i++)
+        {
+            towerMaterials[i].color = fireFlashColor;
+        }
+
         yield return new WaitForSeconds(fireFlashDuration);
-        towerMaterial.color = originalColor;
+
+        for (int i = 0; i < towerMaterials.Count; i++)
+        {
+            towerMaterials[i].color = originalColors[i];
+        }
+
         isFlashing = false;
+    }
+
+    private void HandleGameOver()
+    {
+        Destroy(gameObject);
     }
 }

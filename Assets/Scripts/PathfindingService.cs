@@ -22,15 +22,13 @@ public static class PathfindingService
 
     public static bool ComputeDistanceMap(
         GameBoard gameBoard,
-        DistanceMap distanceMap,
-        GridCoordinate goal,
-        GridCoordinate start)
+        DistanceMap distanceMap)
     {
         bool pathIsBlocked = false;
         distanceMap.Reset(sentinel);
         Queue<GridCoordinate> toVisit = new();
-        distanceMap.SetDistance(goal, 0);
-        toVisit.Enqueue(goal);
+        distanceMap.SetDistance(distanceMap.goalCell, 0);
+        toVisit.Enqueue(distanceMap.goalCell);
          
         while (toVisit.Count > 0)
         {
@@ -45,7 +43,7 @@ public static class PathfindingService
             }
         }
 
-        if (distanceMap.GetDistance(start) == sentinel)
+        if (distanceMap.GetDistance(distanceMap.startCell) == sentinel)
         {
             pathIsBlocked = true;
         }

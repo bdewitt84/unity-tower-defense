@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Wave3Data
   m_EditorClassIdentifier: 
   waveNumber: 3
-  spawnDelay: 3
+  spawnDelay: 11
   enemyCount: 10
   spawnInterval: 0.8
