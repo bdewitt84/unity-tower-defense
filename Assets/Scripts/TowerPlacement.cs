@@ -34,15 +34,11 @@ public class TowerPlacement : MonoBehaviour
 
     private void Update()
     {
-        if (left_mouse_button_is_down())
+        if (left_mouse_button_is_down() && camera_is_not_null())
         {
-            if (camera_is_not_null())
+            if (get_location_of_click() && location_of_click_is_ground())
             {
-                get_location_of_click();
-                if (location_of_click_is_ground())
-                {
-                    place_tower();
-                }
+                place_tower();
             }
         }
     }
@@ -55,14 +51,13 @@ public class TowerPlacement : MonoBehaviour
 
     private bool location_of_click_is_ground()
     {
-        // null exception when no scene object clicked?
-        return _hit.transform.CompareTag("Ground");
+        return _hit.transform != null && _hit.transform.CompareTag("Ground");
     }
 
-    private void get_location_of_click()
+    private bool get_location_of_click()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Physics.Raycast(ray, out _hit);
+        return Physics.Raycast(ray, out _hit);
     }
 
     private bool camera_is_not_null()
