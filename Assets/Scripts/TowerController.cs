@@ -87,6 +87,7 @@ public class TowerController : MonoBehaviour
         if (currentTarget != null)
         {
             currentTarget.TakeDamage(damage);
+            FindObjectOfType<AudioManager>()?.PlayTowerFireSound(); // For Sound Effect
             if (!isFlashing)
             {
                 StartCoroutine(FlashTower());

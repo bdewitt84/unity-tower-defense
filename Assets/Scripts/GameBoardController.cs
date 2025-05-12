@@ -43,7 +43,7 @@ public class GameBoardController : MonoBehaviour
         else
         {
             GameEvents.TowerPlacementInvalid(gridCoordinate.X, gridCoordinate.Y);
-            Debug.LogWarning(reason);
+            Debug.Log(reason);
         }
     }
 

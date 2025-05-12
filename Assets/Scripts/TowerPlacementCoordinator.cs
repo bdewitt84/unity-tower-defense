@@ -19,12 +19,15 @@ public class TowerPlacementCoordinator : MonoBehaviour
         string reason;
         if (!gameBoardController.CanPlaceTower(worldPosition, out reason))
         {
-            Debug.Log(reason);
+            Debug.Log("Placement blocked: " + reason);
+            GameEvents.TowerPlacementInvalid((int)worldPosition.x, (int)worldPosition.z);
             return false;
         }
+
         if (gameStateManager.GetPlayerGold() < tower.GetCost())
         {
             Debug.Log("Not enough gold");
+            GameEvents.TowerPlacementInvalid((int)worldPosition.x, (int)worldPosition.z);
             return false;
         }
 
