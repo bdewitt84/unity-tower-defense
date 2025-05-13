@@ -1,5 +1,14 @@
 using UnityEngine;
 
+// Author: Brett DeWitt
+//
+// Created: 5.8.25
+//
+// Description:
+//   Cooridnates with GameStateManager and GameBoardController to make sure
+//   that the requestion position on the game board is empty and that the
+//   player has enough gold to purchase the tower
+
 public class TowerPlacementCoordinator : MonoBehaviour
 {
     [SerializeField] private GameObject gameBoard;

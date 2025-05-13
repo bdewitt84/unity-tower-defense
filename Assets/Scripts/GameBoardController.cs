@@ -1,5 +1,14 @@
 using UnityEngine;
 
+// Author: Brett DeWitt
+// 
+// Created: 5/8/2025
+// 
+// Description:
+//   Stores board state and handles tower instantiation based on
+//   TowerPlacementRequest event
+
+
 public class GameBoardController : MonoBehaviour
 {
     private enum CellState { Empty, Blocked }
