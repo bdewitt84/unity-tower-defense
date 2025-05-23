@@ -1,5 +1,7 @@
 // ./Assets/Scripts/InputManager.cs
 
+using UnityEngine;
+
 // Author: Brett DeWitt, Dante Borden
 //
 // Created: 5.22.2025
@@ -14,19 +16,28 @@
 //  TowerPlacementValidator
 //      gets TowerPlacementRequest event -> validates placement -> fires TowerPlacementExecute event
 //  TowerPlacementExecutor
-//      gets TowerPlacementExecute event -> deducts gold -> places tower -> fires OnTowerPlaced event
+//      gets TowerPlacementExecute event -> instantiates tower -> places tower -> fires OnTowerPlaced event
 
-
-using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
 
     [SerializeField] private GameObject towerPrefab;
 
-    private void Start()
-    {
 
+    private void OnEnable()
+    {
+        GameEvents.OnTowerSelected += HandleTowerSelected;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnTowerSelected -= HandleTowerSelected;
+    }
+
+    private void HandleTowerSelected(GameObject towerPrefab)
+    {
+        this.towerPrefab = towerPrefab;
     }
 
     // Update is called once per frame
@@ -37,18 +48,41 @@ public class InputManager : MonoBehaviour
             && GetRaycastHit(out RaycastHit hit)
             )
         {
-            if(HitIsGround(hit))
+            if(HitIsGround(hit)
+                && TowerIsSelected())
             {
                 RequestTowerPlacement(hit);
-                Debug.Log("Tower placement requested");
             }
+        } else if (RightMouseButtonIsDown())
+        {
+            DeselectTower();
         }
+    }
+
+    public void SelectTower(GameObject towerPrefab)
+    {
+        if (towerPrefab == null)
+        {
+            Debug.Log("Please don't pass null to SelectTower");
+            return;
+        }
+        this.towerPrefab = towerPrefab;
     }
 
     private void RequestTowerPlacement(RaycastHit hit)
     {
         Vector3 placeAt = hit.point;
         GameEvents.TowerPlacementRequest(placeAt, towerPrefab);
+    }
+
+    private bool TowerIsSelected()
+    {
+        return towerPrefab != null;
+    }
+
+    private void DeselectTower()
+    {
+        towerPrefab = null;
     }
 
     private bool HitIsGround(RaycastHit hit)
@@ -70,6 +104,11 @@ public class InputManager : MonoBehaviour
     private bool LeftMouseButtonIsDown()
     {
         return Input.GetMouseButtonDown(0);
+    }
+
+    private bool RightMouseButtonIsDown()
+    {
+        return Input.GetMouseButtonDown(1);
     }
 
 }
