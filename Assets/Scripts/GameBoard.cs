@@ -28,12 +28,12 @@ public class GameBoardController : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnTowerPlacementRequest += HandleTowerPlacementRequest;
+        // GameEvents.OnTowerPlacementRequest += HandleTowerPlacementRequest;
     }
 
     private void OnDisable()
     {
-        GameEvents.OnTowerPlacementRequest -= HandleTowerPlacementRequest;
+        // GameEvents.OnTowerPlacementRequest -= HandleTowerPlacementRequest;
     }
 
     private void InitializeBoard()

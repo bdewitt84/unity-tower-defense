@@ -465,8 +465,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 22
   height: 22
+  cellSize: 1
   towerPrefab: {fileID: 7092247501507110302, guid: 76e5b9efc43270c44bd86ebd59b22acc, type: 3}
-  offsetFromOrigin: {x: -11, y: 0, z: -11}
 --- !u!4 &130417953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6453233240354781277, guid: 865813ac37a07b44789c0ae4581d9973, type: 3}
@@ -2482,12 +2482,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1321912076}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af6b093ad40de8b4a8bd3f0c7f398a1b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9004a1b025d568145a3ed62525fe7f1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerPlacementCoordinator: {fileID: 1386214559}
-  towerPrefab: {fileID: 7092247501507110302, guid: 76e5b9efc43270c44bd86ebd59b22acc, type: 3}
-  placing: 0
 --- !u!1 &1386214559
 GameObject:
   m_ObjectHideFlags: 0
@@ -2534,6 +2531,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameBoard: {fileID: 103269261}
   gameState: {fileID: 415991037}
+  towerPrefab: {fileID: 7092247501507110302, guid: 76e5b9efc43270c44bd86ebd59b22acc, type: 3}
 --- !u!1 &1388149258
 GameObject:
   m_ObjectHideFlags: 0

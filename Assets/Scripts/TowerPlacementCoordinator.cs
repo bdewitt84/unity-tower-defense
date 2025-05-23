@@ -17,13 +17,35 @@ public class TowerPlacementCoordinator : MonoBehaviour
     private GameBoardController gameBoardController;
     private GameStateManager gameStateManager;
 
+    public GameObject towerPrefab;
+    TowerController towerController;
+
     public void Start()
     {
         gameBoardController = gameBoard.GetComponent<GameBoardController>();
         gameStateManager = gameState.GetComponent<GameStateManager>();
+        towerController = towerPrefab.GetComponent<TowerController>();
     }
 
-    public bool TryPlaceTower(Vector3 worldPosition, TowerController tower)
+    public void OnEnable()
+    {
+        GameEvents.OnTowerPlacementRequest += HandleTowerPlacementRequest;
+    }
+
+    public void OnDisable()
+    {
+        GameEvents.OnTowerPlacementRequest -= HandleTowerPlacementRequest;
+    }
+
+    private void HandleTowerPlacementRequest(Vector3 worldPosition)
+    {
+        if (CanPlaceTower(worldPosition, towerController))
+        {
+            PlaceTower(worldPosition, towerController);
+        }
+    }
+
+    private bool CanPlaceTower(Vector3 worldPosition, TowerController tower)
     {
         string reason;
         if (!gameBoardController.CanPlaceTower(worldPosition, out reason))
@@ -39,8 +61,11 @@ public class TowerPlacementCoordinator : MonoBehaviour
             GameEvents.TowerPlacementInvalid((int)worldPosition.x, (int)worldPosition.z);
             return false;
         }
-
-        gameBoardController.PlaceTower(worldPosition, tower);
         return true;
+    }
+
+    public void PlaceTower(Vector3 worldPosition, TowerController tower)
+    {
+        gameBoardController.PlaceTower(worldPosition, tower);
     }
 }
