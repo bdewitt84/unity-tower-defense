@@ -21,7 +21,7 @@ public static class PathfindingService
     // known as a flood-fill.
 
     public static bool ComputeDistanceMap(
-        GameBoard gameBoard,
+        GridData gameBoard,
         DistanceMap distanceMap)
     {
         bool pathIsBlocked = false;
@@ -35,7 +35,7 @@ public static class PathfindingService
             GridCoordinate currentCell = toVisit.Dequeue();
             int currentDistance = distanceMap.GetDistance(currentCell);
             foreach (var neighbor in gameBoard.GetNeighbors(currentCell)) {
-                if (!gameBoard.IsCellBlocked(neighbor) && distanceMap.GetDistance(neighbor) == sentinel)
+                if (!gameBoard.GetCell(neighbor).isOccupied && distanceMap.GetDistance(neighbor) == sentinel)
                 {
                     distanceMap.SetDistance(neighbor, currentDistance + 1);
                     toVisit.Enqueue(neighbor);

@@ -15,14 +15,16 @@ public class GameBoardController : MonoBehaviour
 
     [SerializeField] private int width = 22;
     [SerializeField] private int height = 22;
-    [SerializeField] private GameObject towerPrefab;
-    [SerializeField] private Vector3 offsetFromOrigin = new(-11.0f, 0.0f, -11.0f);
+    [SerializeField] private float cellSize = 1.0f;
 
-    private GameBoard board;
+    [SerializeField] private Vector3 offsetFromOrigin = new(-11.0f, 0.0f, -11.0f); // make a function for this
+    [SerializeField] private GameObject towerPrefab; // marked for deletion
+
+    private GridData board;
 
     private void Start()
     {
-        board = new GameBoard(width, height);
+        InitializeBoard();
     }
 
     private void OnEnable()
@@ -35,9 +37,14 @@ public class GameBoardController : MonoBehaviour
         GameEvents.OnTowerPlacementRequest -= HandleTowerPlacementRequest;
     }
 
+    private void InitializeBoard()
+    {
+        board = new GridData(width, height);
+    }
+
     private void HandleTowerPlacementRequest(Vector3 globalPosition)
     {
-        GridCoordinate gridCoordinate = GetGridCoordinateFromWorldPosition(globalPosition);
+        GridCoordinate gridCoordinate = GetGridCoordinate(globalPosition);
         string reason;
         if (CanPlaceTower(gridCoordinate, out reason))
         {
@@ -46,7 +53,7 @@ public class GameBoardController : MonoBehaviour
             placeAt += towerOffset;
             GameObject towerObject = InstantiateTower(placeAt);
             TowerController towerController = towerObject.GetComponent<TowerController>();
-            board.SetCellBlocked(gridCoordinate.X, gridCoordinate.Y);
+            board.SetCellOccupied(gridCoordinate.X, gridCoordinate.Y, true);
             GameEvents.TowerPlacementSuccess(towerController);
         }
         else
@@ -58,14 +65,14 @@ public class GameBoardController : MonoBehaviour
 
     public void PlaceTower(Vector3 globalPosition, TowerController tower)
     {
-        GridCoordinate cell = GetGridCoordinateFromWorldPosition(globalPosition);
+        GridCoordinate cell = GetGridCoordinate(globalPosition);
         globalPosition = GetWorldPositionFromGridCoordinates(cell);
         Vector3 towerOffset = new Vector3(0.5f, 0.0f, 0.5f);
         globalPosition += towerOffset;
         GameObject towerObject = InstantiateTower(globalPosition);
         TowerController towerController = towerObject.GetComponent<TowerController>();
 
-        board.SetCellBlocked(cell.X, cell.Y);
+        board.SetCellOccupied(cell.X, cell.Y, true);
         GameEvents.TowerPlacementSuccess(towerController);
     }
 
@@ -78,7 +85,7 @@ public class GameBoardController : MonoBehaviour
 
     public bool CanPlaceTower(Vector3 worldPosition, out string reason)
     {
-        GridCoordinate cell = GetGridCoordinateFromWorldPosition(worldPosition);
+        GridCoordinate cell = GetGridCoordinate(worldPosition);
         return CanPlaceTower(cell, out reason);
     }
 
@@ -89,7 +96,7 @@ public class GameBoardController : MonoBehaviour
             reason = $"Tower placement coordinates out of bounds: {gridCoordinate}";
             return false;
         }
-        if (!board.IsCellEmpty(gridCoordinate.X, gridCoordinate.Y))
+        if (board.GetCell(gridCoordinate.X, gridCoordinate.Y).isOccupied)
         {
             reason = $"Cell already occupied: {gridCoordinate}";
             return false;
@@ -100,12 +107,16 @@ public class GameBoardController : MonoBehaviour
 
 
     // Retrurns the grid coordinates corresponding to the global Vector3 position
-    private GridCoordinate GetGridCoordinateFromWorldPosition(Vector3 worldPosition)
+    private GridCoordinate GetGridCoordinate(Vector3 worldPosition)
     {
-        worldPosition -= offsetFromOrigin;
-        int gridX = Mathf.FloorToInt(worldPosition.x);
-        int gridY = Mathf.FloorToInt(worldPosition.z);
-        return new GridCoordinate(gridX, gridY);
+        //worldPosition -= offsetFromOrigin;
+        //int gridX = Mathf.FloorToInt(worldPosition.x);
+        //int gridY = Mathf.FloorToInt(worldPosition.z);
+        //return new GridCoordinate(gridX, gridY);
+        
+        int coord_x = Mathf.FloorToInt(worldPosition.x + (width * cellSize) / 2);
+        int coord_y = Mathf.FloorToInt(worldPosition.z + (height * cellSize) / 2);
+        return new GridCoordinate(coord_x, coord_y);
     }
 
     private Vector3 GetWorldPositionFromGridCoordinates(GridCoordinate gridCoordinate)
