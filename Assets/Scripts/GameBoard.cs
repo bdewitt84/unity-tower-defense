@@ -17,7 +17,6 @@ public class GameBoardController : MonoBehaviour
     [SerializeField] private int height = 22;
     [SerializeField] private float cellSize = 1.0f;
 
-    [SerializeField] private Vector3 offsetFromOrigin = new(-11.0f, 0.0f, -11.0f); // make a function for this
     [SerializeField] private GameObject towerPrefab; // marked for deletion
 
     private GridData board;
@@ -109,11 +108,6 @@ public class GameBoardController : MonoBehaviour
     // Retrurns the grid coordinates corresponding to the global Vector3 position
     private GridCoordinate GetGridCoordinate(Vector3 worldPosition)
     {
-        //worldPosition -= offsetFromOrigin;
-        //int gridX = Mathf.FloorToInt(worldPosition.x);
-        //int gridY = Mathf.FloorToInt(worldPosition.z);
-        //return new GridCoordinate(gridX, gridY);
-        
         int coord_x = Mathf.FloorToInt(worldPosition.x + (width * cellSize) / 2);
         int coord_y = Mathf.FloorToInt(worldPosition.z + (height * cellSize) / 2);
         return new GridCoordinate(coord_x, coord_y);
@@ -121,8 +115,9 @@ public class GameBoardController : MonoBehaviour
 
     private Vector3 GetWorldPositionFromGridCoordinates(GridCoordinate gridCoordinate)
     {
-        Vector3 worldPosition = new Vector3(gridCoordinate.X, transform.position.y, gridCoordinate.Y);
-        worldPosition += offsetFromOrigin;
+        float world_x = gridCoordinate.X * cellSize - (width * cellSize) / 2;
+        float world_y = gridCoordinate.Y * cellSize - (height * cellSize) / 2;
+        Vector3 worldPosition = new Vector3(world_x, transform.position.y, world_y);
         return worldPosition;
     }
 }
