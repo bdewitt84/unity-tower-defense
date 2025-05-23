@@ -68,7 +68,7 @@ public class AudioManager : MonoBehaviour
         PlaySFX(enemyGoalClip);
     }
 
-    private void HandleTowerPlacementSuccess(TowerController tower)
+    private void HandleTowerPlacementSuccess(GameObject towerInstance)
     {
         PlaySFX(placementSuccessClip);
     }

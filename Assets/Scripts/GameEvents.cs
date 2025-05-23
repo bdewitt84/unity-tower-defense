@@ -52,16 +52,20 @@ public static class GameEvents
     public static void PlayerHealthChanged(int updatedPlayerHealth) => OnPlayerHealthChanged?.Invoke(updatedPlayerHealth);
 
     // TowerPlacementRequest
-    public static Action<Vector3> OnTowerPlacementRequest;
-    public static void TowerPlacementRequest(Vector3 globalPosition) => OnTowerPlacementRequest?.Invoke(globalPosition);
+    public static Action<Vector3, GameObject> OnTowerPlacementRequest;
+    public static void TowerPlacementRequest(Vector3 globalPosition, GameObject tower) => OnTowerPlacementRequest?.Invoke(globalPosition, tower);
+
+    // TowerPlacementExecute
+    public static Action<Vector3, GameObject> OnTowerPlacementExecute;
+    public static void TowerPlacementExecute(Vector3 globalPosition, GameObject tower) => OnTowerPlacementExecute?.Invoke(globalPosition, tower);
 
     // TowerPlacementBlocked
     public static Action<int, int> OnTowerPlacementInvalid;
     public static void TowerPlacementInvalid(int gridX, int gridY) => OnTowerPlacementInvalid?.Invoke(gridX, gridY);
 
     // TowerPlacementSuccess
-    public static Action<TowerController> OnTowerPlacementSuccess;
-    public static void TowerPlacementSuccess(TowerController tower) => OnTowerPlacementSuccess?.Invoke(tower);
+    public static Action<GameObject> OnTowerPlacementSuccess;
+    public static void TowerPlacementSuccess(GameObject tower) => OnTowerPlacementSuccess?.Invoke(tower);
 
     // Game Over
     public static Action OnGameOver;

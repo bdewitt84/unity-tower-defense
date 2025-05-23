@@ -1,4 +1,5 @@
-using System;
+// ./Assets/Scripts/Managers/GameStateManager.cs
+
 using UnityEngine;
 
 // Author: Brett DeWitt
@@ -57,18 +58,12 @@ public class GameStateManager : MonoBehaviour
         GameEvents.PlayerGoldChanged(playerGold);
     }
 
-    private void HandleTowerPlacementSuccess(TowerController tower)
+    private void HandleTowerPlacementSuccess(GameObject towerInstance)
     {
-        int cost = tower.GetCost();
-        if (playerGold >= cost)
-        {
-            playerGold -= cost;
-            GameEvents.PlayerGoldChanged(playerGold);
-        }
-        else
-        {
-            Destroy(tower.gameObject);
-        }
+        TowerController towerController = towerInstance.GetComponent<TowerController>();
+        int cost = towerController.GetCost();
+        playerGold -= cost;
+        GameEvents.PlayerGoldChanged(playerGold);
     }
 
     public int GetPlayerGold()
