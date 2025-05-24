@@ -1,5 +1,6 @@
 // ./Assets/Scripts/GameBoard.cs
 
+using System;
 using UnityEngine;
 
 // Author: Brett DeWitt
@@ -7,8 +8,7 @@ using UnityEngine;
 // Created: 5/8/2025
 // 
 // Description:
-//   Stores board state and handles tower instantiation based on
-//   TowerPlacementRequest event
+//   Stores board state and handles tower placement
 
 
 public class GameBoardController : MonoBehaviour
@@ -26,17 +26,20 @@ public class GameBoardController : MonoBehaviour
         InitializeBoard();
     }
 
+    // Creates the grid used to store the board state
     private void InitializeBoard()
     {
         board = new GridData(width, height);
     }
 
+    // Returns true if a tower can be placed at the board's grid coordinates corresponding to worldPosition
     public bool CanPlaceTower(Vector3 worldPosition)
     {
         GridCoordinate gridCoord = GetGridCoordinate(worldPosition);
         return CanPlaceTower(gridCoord);
     }
 
+    // Returns true if a tower can be placed at the board's grid coordinates
     public bool CanPlaceTower(GridCoordinate gridCoord)
     {
         if (!board.IsWithinBounds(gridCoord.X, gridCoord.Y)
@@ -47,30 +50,41 @@ public class GameBoardController : MonoBehaviour
         return true;
     }
 
+    // Places instance of tower in center of cell corresponding to globalPosition
     public void PlaceTower(Vector3 globalPosition, GameObject towerInstance)
     {
         GridCoordinate girdCoord = GetGridCoordinate(globalPosition);
         board.SetCellOccupied(girdCoord.X, girdCoord.Y, true);
 
-        globalPosition = GetWorldPositionFromGridCoordinates(girdCoord);
-        Vector3 towerOffset = new Vector3(0.5f, 0.0f, 0.5f);
-        globalPosition += towerOffset;
+        globalPosition = SnapToGrid(globalPosition);
         towerInstance.transform.position = globalPosition;
     }
 
+
     // Retrurns the grid coordinates corresponding to the global Vector3 position
-    private GridCoordinate GetGridCoordinate(Vector3 worldPosition)
+    public GridCoordinate GetGridCoordinate(Vector3 worldPosition)
     {
         int coord_x = Mathf.FloorToInt(worldPosition.x + (width * cellSize) / 2);
         int coord_y = Mathf.FloorToInt(worldPosition.z + (height * cellSize) / 2);
         return new GridCoordinate(coord_x, coord_y);
     }
 
-    private Vector3 GetWorldPositionFromGridCoordinates(GridCoordinate gridCoordinate)
+    // Returns world position corresponding to origin of the provided grid coordinates
+    public Vector3 GetWorldPositionFromGridCoordinates(GridCoordinate gridCoordinate)
     {
         float world_x = gridCoordinate.X * cellSize - (width * cellSize) / 2;
         float world_y = gridCoordinate.Y * cellSize - (height * cellSize) / 2;
         Vector3 worldPosition = new Vector3(world_x, transform.position.y, world_y);
         return worldPosition;
     }
+
+    // Returns position in the center of the cell at worldPosition
+    public Vector3 SnapToGrid(Vector3 worldPosition)
+    {
+        GridCoordinate girdCoord = GetGridCoordinate(worldPosition);
+        worldPosition = GetWorldPositionFromGridCoordinates(girdCoord);
+        Vector3 offset = new Vector3(cellSize/2, 0, cellSize/2);
+        return worldPosition += offset;
+    }
+
 }
