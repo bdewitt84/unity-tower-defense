@@ -57,8 +57,6 @@ public class LanePathFinder : PathfindingComponent
                                   parent.transform.position.y,
                                   currentWaypoint.transform.position.z);
 
-        Debug.Log($"CurrentWaypointPosition: {currentWaypoint.position}");
-
         // Advance index
         waypointIndex += 1;
     }

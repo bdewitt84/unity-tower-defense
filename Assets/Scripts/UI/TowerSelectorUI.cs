@@ -26,7 +26,6 @@ public class TowerSelectorUI : MonoBehaviour
 
     private void OnButtonClicked()
     {
-        Debug.Log("UI firing TowerSelected");
         GameEvents.TowerSelected(GetTowerPrefab());
     }
 
