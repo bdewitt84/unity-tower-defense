@@ -71,6 +71,14 @@ public static class GameEvents
     public static Action<GameObject> OnTowerPlacementSuccess;
     public static void TowerPlacementSuccess(GameObject tower) => OnTowerPlacementSuccess?.Invoke(tower);
 
+    // TowerPreviewRequest
+    public static Action<Vector3, GameObject> OnTowerPreviewRequest;
+    public static void TowerPreviewRequest(Vector3 globalPosition, GameObject tower) => OnTowerPreviewRequest?.Invoke(globalPosition, tower);
+
+    // TowerPreviewDisable
+    public static Action OnTowerPreviewDisable;
+    public static void TowerPreviewDisable() => OnTowerPreviewDisable?.Invoke();
+
     // Game Over
     public static Action OnGameOver;
     public static void GameOver() => OnGameOver?.Invoke();
