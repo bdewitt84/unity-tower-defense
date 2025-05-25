@@ -1,6 +1,8 @@
 // ./Assets/Scripts/InputManager.cs
 
+
 using UnityEngine;
+
 
 // Author: Brett DeWitt, Dante Borden
 //
@@ -19,11 +21,13 @@ using UnityEngine;
 //      gets TowerPlacementExecute event -> instantiates tower -> places tower -> fires OnTowerPlaced event
 
 
-public class InputManager : MonoBehaviour
+public class InputManager_old : MonoBehaviour
 {
 
-    [SerializeField] private GameObject towerPrefab;
-
+    private GameObject towerPrefab;
+    private RaycastHit _lastHit;
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private LayerMask _pathLayer;
 
     private void OnEnable()
     {
@@ -35,28 +39,45 @@ public class InputManager : MonoBehaviour
         GameEvents.OnTowerSelected -= HandleTowerSelected;
     }
 
-    private void HandleTowerSelected(GameObject towerPrefab)
-    {
-        this.towerPrefab = towerPrefab;
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if (LeftMouseButtonIsDown()
-            && CameraIsNotNull()
-            && GetRaycastHit(out RaycastHit hit)
-            )
+        // Update hit
+        if (CameraIsNotNull()
+            && GetRaycastHit(out RaycastHit hit))
         {
-            if(HitIsGround(hit)
+            // Left click
+            if (LeftMouseButtonIsDown()
+                && HitIsGround(hit)
                 && TowerIsSelected())
             {
                 RequestTowerPlacement(hit);
             }
-        } else if (RightMouseButtonIsDown())
-        {
-            DeselectTower();
+            // Right click
+            else if (RightMouseButtonIsDown())
+            {
+                DeselectTower();
+            }
+            // Hover
+            else if (TowerIsSelected()
+                && HitIsGround(hit))
+            {
+                if (!hit.Equals(_lastHit))
+                {
+                    RequestTowerPreview(hit);
+                }
+                _lastHit = hit;
+            }
+            else
+            {
+                DisableTowerPreview();
+            }   
         }
+    }
+
+    private void DisableTowerPreview()
+    {
+        GameEvents.TowerPreviewDisable();
     }
 
     public void SelectTower(GameObject towerPrefab)
@@ -73,6 +94,12 @@ public class InputManager : MonoBehaviour
     {
         Vector3 placeAt = hit.point;
         GameEvents.TowerPlacementRequest(placeAt, towerPrefab);
+    }
+
+    private void RequestTowerPreview(RaycastHit hit)
+    {
+        Vector3 previewAt = hit.point;
+        GameEvents.TowerPreviewRequest(previewAt, towerPrefab);
     }
 
     private bool TowerIsSelected()
@@ -93,7 +120,7 @@ public class InputManager : MonoBehaviour
     private bool GetRaycastHit(out RaycastHit hit)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        return Physics.Raycast(ray, out hit);
+        return Physics.Raycast(ray, out hit, 100f, _groundLayer | _pathLayer);
     }
 
     private bool CameraIsNotNull()
@@ -109,6 +136,11 @@ public class InputManager : MonoBehaviour
     private bool RightMouseButtonIsDown()
     {
         return Input.GetMouseButtonDown(1);
+    }
+
+    private void HandleTowerSelected(GameObject towerPrefab)
+    {
+        this.towerPrefab = towerPrefab;
     }
 
 }

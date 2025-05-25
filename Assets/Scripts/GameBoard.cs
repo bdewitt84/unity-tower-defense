@@ -83,7 +83,7 @@ public class GameBoardController : MonoBehaviour
     {
         GridCoordinate girdCoord = GetGridCoordinate(worldPosition);
         worldPosition = GetWorldPositionFromGridCoordinates(girdCoord);
-        Vector3 offset = new Vector3(cellSize/2, 0, cellSize/2);
+        Vector3 offset = new Vector3(cellSize/2, 0.0f, cellSize/2);
         return worldPosition += offset;
     }
 
