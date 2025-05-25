@@ -31,6 +31,8 @@ public class InputStateBuild : InputStateBase
         if (RightMouseButtonIsDown())
         {
             Debug.Log("Deselected");
+            _disableRequested = true;
+            GameEvents.TowerPreviewDisable();
             _inputManager.SetState(new InputStateDefault(_inputManager));
         }
         else
@@ -38,7 +40,6 @@ public class InputStateBuild : InputStateBase
             if (GetRaycastHit(out RaycastHit hit, _inputManager.GroundLayer))
             {
                 _disableRequested = false;
-                Debug.Log($"InputStateBuild: Tower prefab being sent to preview: {_towerPrefab?.name}");
                 GameEvents.TowerPreviewRequest(hit.point, _towerPrefab);
             }
             else if (!_disableRequested)
