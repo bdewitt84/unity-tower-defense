@@ -148,15 +148,6 @@ public class EnemyController : MonoBehaviour
         return (distanceFromWaypoint < margin);
     }
 
-    // Sets current position to the current waypoint, making sure enemy
-    // accuratey follows the path
-    private void AlignWithWaypoint()
-    {
-        transform.position = pathing.GetCurrentWaypointPosition();
-        // Handle cases
-        //   waypoint is null
-    }
-
     private void AlignWithPosition(Vector3 position)
     {
         transform.position = position;
