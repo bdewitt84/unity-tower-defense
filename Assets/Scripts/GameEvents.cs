@@ -79,6 +79,10 @@ public static class GameEvents
     public static Action OnTowerPreviewDisable;
     public static void TowerPreviewDisable() => OnTowerPreviewDisable?.Invoke();
 
+    // TowerFired
+    public static Action OnTowerFired;
+    public static void TowerFired() => OnTowerFired?.Invoke();
+
     // Game Over
     public static Action OnGameOver;
     public static void GameOver() => OnGameOver?.Invoke();

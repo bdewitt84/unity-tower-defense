@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,7 +86,7 @@ public class TowerController : MonoBehaviour
         if (currentTarget != null)
         {
             currentTarget.TakeDamage(damage);
-            FindObjectOfType<AudioManager>()?.PlayTowerFireSound(); // For Sound Effect
+            GameEvents.TowerFired();
             if (!isFlashing)
             {
                 StartCoroutine(FlashTower());
