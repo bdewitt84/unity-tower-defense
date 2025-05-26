@@ -21,19 +21,17 @@ public class TowerController : MonoBehaviour
     private float currentCooldown = 0f;
     [SerializeField] private float maxCooldown = 2f;
 
-    [SerializeField] private Color fireFlashColor = Color.blue;
-    [SerializeField] private float fireFlashDuration = 0.1f;
     [SerializeField] private int cost = 10;
 
-    private bool isFlashing = false;
+    private Vector3 _firingPosition = new Vector3(0.0f, 2.5f, 0.0f);
 
-    private Renderer[] towerRenderers;
-    private List<Material> towerMaterials = new();
-    private List<Color> originalColors = new();
+    [SerializeField] private Projectile _projectilePrefab;
+    [SerializeField] private float _projectileSpeed;
+
 
     void Start()
     {
-        InitializeMaterials();
+
     }
 
     private void OnEnable()
@@ -85,12 +83,10 @@ public class TowerController : MonoBehaviour
     {
         if (currentTarget != null)
         {
-            currentTarget.TakeDamage(damage);
             GameEvents.TowerFired();
-            if (!isFlashing)
-            {
-                StartCoroutine(FlashTower());
-            }
+            Projectile projectile = Instantiate(_projectilePrefab);
+            projectile.Initialize(currentTarget, _projectileSpeed, damage);
+            projectile.transform.position = transform.position + _firingPosition;
             currentCooldown = maxCooldown;
         }
     }
@@ -112,37 +108,6 @@ public class TowerController : MonoBehaviour
     private void CoolDownWeapon()
     {
         currentCooldown -= Time.deltaTime;
-    }
-
-    private void InitializeMaterials()
-    {
-        towerRenderers = GetComponentsInChildren<Renderer>();
-        foreach (Renderer renderer in towerRenderers)
-        {
-            Material clonedMat = new Material(renderer.material);
-            renderer.material = clonedMat;
-            towerMaterials.Add(clonedMat);
-            originalColors.Add(clonedMat.color);
-        }
-    }
-
-    private IEnumerator FlashTower()
-    {
-        isFlashing = true;
-
-        for (int i = 0; i < towerMaterials.Count; i++)
-        {
-            towerMaterials[i].color = fireFlashColor;
-        }
-
-        yield return new WaitForSeconds(fireFlashDuration);
-
-        for (int i = 0; i < towerMaterials.Count; i++)
-        {
-            towerMaterials[i].color = originalColors[i];
-        }
-
-        isFlashing = false;
     }
 
     private void HandleGameOver()

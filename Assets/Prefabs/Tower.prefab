@@ -128,6 +128,9 @@ MonoBehaviour:
   fireFlashColor: {r: 0, g: 0, b: 1, a: 1}
   fireFlashDuration: 0.1
   cost: 10
+  _firingPosition: {x: 0, y: 2.5, z: 0}
+  _projectilePrefab: {fileID: -3024444954531680227, guid: 085c1137783a2e344ba900b015aa7972, type: 3}
+  _projectileSpeed: 20
 --- !u!1001 &8430218248589646430
 PrefabInstance:
   m_ObjectHideFlags: 0

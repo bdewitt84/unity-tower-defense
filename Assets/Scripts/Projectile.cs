@@ -52,7 +52,7 @@ public class Projectile : MonoBehaviour
 
     private void Die()
     {
-        Destroy(this);
+        Destroy(gameObject);
     }
 
     private bool ArrivedAtTarget()
