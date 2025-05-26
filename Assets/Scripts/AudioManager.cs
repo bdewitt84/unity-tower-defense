@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // Author: Minsu Kim
@@ -44,6 +45,7 @@ public class AudioManager : MonoBehaviour
         GameEvents.OnEnemyReachedGoal += HandleEnemyReachedGoal;
         GameEvents.OnTowerPlacementSuccess += HandleTowerPlacementSuccess;
         GameEvents.OnTowerPlacementInvalid += HandleTowerPlacementFail;
+        GameEvents.OnTowerFired += HandleTowerFired;
         GameEvents.OnGameOver += HandleGameOver;
         GameEvents.OnGameClear += HandleGameClear;
     }
@@ -54,6 +56,7 @@ public class AudioManager : MonoBehaviour
         GameEvents.OnEnemyReachedGoal -= HandleEnemyReachedGoal;
         GameEvents.OnTowerPlacementSuccess -= HandleTowerPlacementSuccess;
         GameEvents.OnTowerPlacementInvalid -= HandleTowerPlacementFail;
+        GameEvents.OnTowerFired -= HandleTowerFired;
         GameEvents.OnGameOver -= HandleGameOver;
         GameEvents.OnGameClear -= HandleGameClear;
     }
@@ -88,7 +91,7 @@ public class AudioManager : MonoBehaviour
         PlaySFX(gameClearClip);
     }
 
-    public void PlayTowerFireSound()
+    public void HandleTowerFired()
     {
         PlaySFX(towerFireClip);
     }
