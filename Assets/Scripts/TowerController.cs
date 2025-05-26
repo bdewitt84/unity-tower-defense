@@ -29,11 +29,6 @@ public class TowerController : MonoBehaviour
     [SerializeField] private float _projectileSpeed;
 
 
-    void Start()
-    {
-
-    }
-
     private void OnEnable()
     {
         GameEvents.OnGameOver += HandleGameOver;
@@ -51,6 +46,7 @@ public class TowerController : MonoBehaviour
             if (WeaponIsReady())
             {
                 FireAtTarget();
+                ResetCooldown();
             }
             else
             {
@@ -66,6 +62,11 @@ public class TowerController : MonoBehaviour
     public int GetCost()
     {
         return cost;
+    }
+
+    public float GetRange()
+    {
+        return maxRange;
     }
 
     private bool HasTarget() => currentTarget != null;
@@ -87,8 +88,12 @@ public class TowerController : MonoBehaviour
             Projectile projectile = Instantiate(_projectilePrefab);
             projectile.Initialize(currentTarget, _projectileSpeed, damage);
             projectile.transform.position = transform.position + _firingPosition;
-            currentCooldown = maxCooldown;
         }
+    }
+
+    private void ResetCooldown()
+    {
+        currentCooldown = maxCooldown;
     }
 
     private void TryToFindNewTarget()

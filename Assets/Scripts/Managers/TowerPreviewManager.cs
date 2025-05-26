@@ -15,6 +15,21 @@ public class TowerPreviewManager : MonoBehaviour
     private GameObject _currentPreviewInstance; // The actual instantiated GameObject
     private GameObject _lastRequestedPrefab;    // To track if the source prefab has changed
 
+    private LineRenderer _lineRenderer;
+
+    private void Awake()
+    {
+        _lineRenderer = GetComponent<LineRenderer>();
+        if (_lineRenderer == null)
+        {
+            Debug.LogError("TowerPreviewManager: No LineRenderer component found on this GameObject!", this);
+        }
+        else
+        {
+            _lineRenderer.enabled = false; // Ensure it starts disabled
+        }
+    }
+
     private void OnEnable()
     {
         Debug.Log("TowerPreviewManager: OnEnable called.");
@@ -43,12 +58,12 @@ public class TowerPreviewManager : MonoBehaviour
             Destroy(_currentPreviewInstance);
             _currentPreviewInstance = null;
             _lastRequestedPrefab = null; // Clear last prefab as we're no longer previewing it
+            _lineRenderer.enabled = false; // Hide on disable
         }
     }
 
     public void HandleTowerPreviewRequest(Vector3 worldPosition, GameObject towerPrefab)
     {
-
         // If no instance exists OR the requested prefab is different from the current one
         if (_currentPreviewInstance == null || _lastRequestedPrefab != towerPrefab)
         {
@@ -69,6 +84,10 @@ public class TowerPreviewManager : MonoBehaviour
             Vector3 snappedPosition = SnapPreviewToGrid(worldPosition);
             Color finalPreviewColor = DecidePreviewColor(snappedPosition);
             ApplyPreviewColor(finalPreviewColor);
+
+            TowerController previewController = _currentPreviewInstance.GetComponent<TowerController>();
+            float towerRange = previewController.GetRange(); // Get range from the PREFAB (or its stats script)
+            DrawRangeIndicator(snappedPosition, towerRange, finalPreviewColor);
         }
     }
 
@@ -77,10 +96,10 @@ public class TowerPreviewManager : MonoBehaviour
         MeshRenderer[] renderers = _currentPreviewInstance.GetComponentsInChildren<MeshRenderer>(true);
         foreach (MeshRenderer renderer in renderers)
         {
-            renderer.material.color = finalPreviewColor;
             renderer.material.SetColor("_BaseColor", finalPreviewColor); // <-- Use this for URP Lit
 
         }
+        _lineRenderer.material.SetColor("_BaseColor", finalPreviewColor);
     }
 
     private Color DecidePreviewColor(Vector3 snappedPosition)
@@ -105,6 +124,7 @@ public class TowerPreviewManager : MonoBehaviour
                 // This creates a unique material instance for this renderer.
                 renderer.material = _ghostMaterial;
             }
+            _lineRenderer.material = _ghostMaterial;
         }
     }
 
@@ -128,5 +148,29 @@ public class TowerPreviewManager : MonoBehaviour
     {
         Destroy(_currentPreviewInstance);
         _currentPreviewInstance = null;
+    }
+
+    private void DrawRangeIndicator(Vector3 center, float radius, Color color)
+    {
+        if (_lineRenderer == null) return;
+
+        _lineRenderer.enabled = true;
+        _lineRenderer.startWidth = 0.1f;
+        _lineRenderer.endWidth = 0.1f;
+        int _rangeIndicatorSegments = 64;
+        float _rangeIndicatorYOffset = 0.5f;
+
+        _lineRenderer.positionCount = _rangeIndicatorSegments + 1; // +1 to close the loop
+        Vector3[] points = new Vector3[_rangeIndicatorSegments + 1];
+
+        for (int i = 0; i <= _rangeIndicatorSegments; i++)
+        {
+            float angle = (float)i / (float)_rangeIndicatorSegments * 2f * Mathf.PI;
+            float x = Mathf.Sin(angle) * radius;
+            float z = Mathf.Cos(angle) * radius;
+            // Add a small Y offset to prevent Z-fighting with the ground
+            points[i] = new Vector3(center.x + x, center.y + _rangeIndicatorYOffset, center.z + z);
+        }
+        _lineRenderer.SetPositions(points);
     }
 }
