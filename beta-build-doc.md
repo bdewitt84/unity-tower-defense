@@ -15,7 +15,8 @@
 ### Minsu
 - **Role**: Sound Manager
 - **Contributions**: 
-    - n\a
+    - Feature: Pause Menu
+
 
 ### Dante Borden
 - **Role**: Gameplay Designer
