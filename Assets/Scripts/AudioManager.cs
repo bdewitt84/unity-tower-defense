@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 // Author: Minsu Kim
