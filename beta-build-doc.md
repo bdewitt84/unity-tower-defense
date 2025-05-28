@@ -1,4 +1,4 @@
-# Game Build Document - Alpha
+# Game Build Document - Beta
 
 ## 1. Team Contributions
 
