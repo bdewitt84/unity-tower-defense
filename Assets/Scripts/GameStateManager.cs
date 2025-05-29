@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private int playerGold;
     [SerializeField] private int playerHealthStart = 100;
     [SerializeField] private int playerGoldStart = 50;
-
+    [SerializeField] private float timer = 0.0f;
     private void Start()
     {
         playerHealth = playerHealthStart;
@@ -25,12 +25,24 @@ public class GameStateManager : MonoBehaviour
         playerGold = playerGoldStart;
         GameEvents.OnPlayerGoldChanged(playerGold);
     }
-
+    private void Update()
+    {
+        if (timer > 0.0f)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0.0f)
+            {
+                Debug.Log("Timer has finished");
+                GameEvents.StageMove();
+            }
+        }
+    }
     private void OnEnable()
     {
         GameEvents.OnEnemyKilled += HandleEnemyKilled;
         GameEvents.OnEnemyReachedGoal += HandleEnemyReachedGoal;
         GameEvents.OnTowerPlacementSuccess += HandleTowerPlacementSuccess;
+        GameEvents.OnStageClear += HandleStageClear;
     }
 
 
@@ -39,12 +51,13 @@ public class GameStateManager : MonoBehaviour
         GameEvents.OnEnemyKilled -= HandleEnemyKilled;
         GameEvents.OnEnemyReachedGoal -= HandleEnemyReachedGoal;
         GameEvents.OnTowerPlacementSuccess -= HandleTowerPlacementSuccess;
+        GameEvents.OnStageClear -= HandleStageClear;
 
     }
 
-    private void HandleEnemyReachedGoal(EnemyController enemy)
+    private void HandleEnemyReachedGoal(EnemyController enemy, float damage)
     {
-        playerHealth -= 5;
+        playerHealth -= (int)damage;
         GameEvents.PlayerHealthChanged(playerHealth);
         if (playerHealth <= 0)
         {
@@ -52,9 +65,9 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    private void HandleEnemyKilled(EnemyController enemy)
+    private void HandleEnemyKilled(EnemyController enemy, float reward)
     {
-        playerGold += 5;
+        playerGold += (int)reward;
         GameEvents.PlayerGoldChanged(playerGold);
     }
 
@@ -69,5 +82,11 @@ public class GameStateManager : MonoBehaviour
     public int GetPlayerGold()
     {
         return playerGold;
+    }
+
+    public void HandleStageClear()
+    {
+        timer = 5.0f;
+        Debug.Log("Set timer to 5 sec");
     }
 }
