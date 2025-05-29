@@ -13,6 +13,6 @@ public class MainMenuUI : MonoBehaviour
     // Loads the main game scene
     public void OnPlayButton()
     {
-        SceneManager.LoadScene("MainScene"); 
+        SceneManager.LoadScene("Level 1");
     }
 }

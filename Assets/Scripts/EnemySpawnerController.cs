@@ -24,7 +24,6 @@ public class EnemySpawnerController : MonoBehaviour
     private Queue<GameObject> wave = new();
     [SerializeField] private int waveSize = 5;
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform lane;
     private int waveIndex = 0;
 
@@ -39,29 +38,36 @@ public class EnemySpawnerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (WaveInProgress())
+        if (waveIndex != -1)
         {
-            if (TimeForNextSpawn())
+            if (WaveInProgress())
             {
-                SpawnNextEnemy();
-                if (AllEnemiesSpawned())
+                if (TimeForNextSpawn())
                 {
-                    EndWave();
+                    SpawnNextEnemy();
+                    if (AllEnemiesSpawned())
+                    {
+                        EndWave();
+                    }
                 }
+                UpdateSpawnTimer();
             }
-            UpdateSpawnTimer();
-        } else {
-            UpdateWaveTimer();
-            if (TimeForWave())
+            else
             {
-                if (AllWavesCleared())
+                UpdateWaveTimer();
+                if (TimeForWave())
                 {
-                    GameEvents.GameClear();
-                } else
-                {
-                    InitializeWave();
-                    ResetWaveTimer();
-                    StartNextWave();
+                    if (AllWavesCleared())
+                    {
+                        GameEvents.StageClear();
+                        waveIndex = -1;
+                    }
+                    else
+                    {
+                        InitializeWave();
+                        ResetWaveTimer();
+                        StartNextWave();
+                    }
                 }
             }
         }
@@ -129,18 +135,21 @@ public class EnemySpawnerController : MonoBehaviour
         wave.Clear();
         WaveData currentWaveData = waves[waveIndex];
         spawnInterval = currentWaveData.spawnInterval;
-        waveSize = currentWaveData.enemyCount;
         waveInterval = currentWaveData.spawnDelay;
-
-        for(int i = 0; i < waveSize; i++)
+        int numEnemyTypes = currentWaveData.enemyTypes.Count;
+        for (int typeIndex = 0; typeIndex < numEnemyTypes; typeIndex++)
         {
-            GameObject enemyObject = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
-            enemyObject.SetActive(false);
-            EnemyController enemyController = enemyObject.GetComponent<EnemyController>();
-            LanePathFinder lanePathFinder = new(enemyController, lane);
-            enemyController.SetPathfindingComponent(lanePathFinder);
-            enemyObject.transform.position = spawnPoint.position;
-            wave.Enqueue(enemyObject);
+            waveSize = currentWaveData.enemyCounts[typeIndex];
+            for (int enemyIndex = 0; enemyIndex < waveSize; enemyIndex++)
+            {
+                GameObject enemyObject = Instantiate(currentWaveData.enemyTypes[typeIndex], spawnPoint.position, Quaternion.identity);
+                enemyObject.SetActive(false);
+                EnemyController enemyController = enemyObject.GetComponent<EnemyController>();
+                LanePathFinder lanePathFinder = new(enemyController, lane);
+                enemyController.SetPathfindingComponent(lanePathFinder);
+                enemyObject.transform.position = spawnPoint.position;
+                wave.Enqueue(enemyObject);
+            }
         }
     }
 

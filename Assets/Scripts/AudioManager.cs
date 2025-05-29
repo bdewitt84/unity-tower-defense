@@ -60,12 +60,12 @@ public class AudioManager : MonoBehaviour
         GameEvents.OnGameClear -= HandleGameClear;
     }
 
-    private void HandleEnemyKilled(EnemyController enemy)
+    private void HandleEnemyKilled(EnemyController enemy, float reward)
     {
         PlaySFX(enemyDeathClip);
     }
 
-    private void HandleEnemyReachedGoal(EnemyController enemy)
+    private void HandleEnemyReachedGoal(EnemyController enemy, float damage)
     {
         PlaySFX(enemyGoalClip);
     }
