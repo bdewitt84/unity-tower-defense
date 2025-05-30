@@ -26,7 +26,12 @@
 ### Ashley Rush
 - **Role**: Asset Manager
 - **Contributions**: 
-    - n\a
+    - Added Stages 2 and 3
+    - Added three more enemy types
+    - Rewrote part of the wave system
+    - Added a new event type (StageMove)
+    - Added the ability to change the damage of an enemy + the rewards for killing an enemy
+    - Added a five-second timer after clearing a stage before you move to the next stage
 
 
 ---
@@ -46,7 +51,7 @@
 
 ## 4. Playable WebGL build
 
-- Link to [WebGL build](<https://play.unity.com/en/games/ee8b7497-1502-4768-ae53-874eede15a69/untitled-tower-defense>) on Unity Play.
+- Link to [WebGL build](<https://play.unity.com/en/games/3ce57234-d0d6-4f7a-98ba-a32537f424d5/untitled-tower-defense>) on Unity Play.
 
 ---
 
