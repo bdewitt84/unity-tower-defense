@@ -16,12 +16,15 @@
 ### Brett DeWitt
 - **Role**: Product Owner
 - **Contributions**:
-
+	- Added Congratulations screen on win
+	- Fixed bugs related to tower selection
+	- Fixed player can no longer build on paths
+	- Administrative tasks
 
 ### Minsu
 - **Role**: Sound Manager
 - **Contributions**: 
-
+	- n\a
 
 ### Dante Borden
 - **Role**: Gameplay Designer
