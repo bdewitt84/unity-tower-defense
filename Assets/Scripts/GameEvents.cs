@@ -36,12 +36,12 @@ using UnityEngine;
 public static class GameEvents
 {
     // EnemyKilled
-    public static Action<EnemyController> OnEnemyKilled;
-    public static void EnemyKilled(EnemyController enemy) => OnEnemyKilled?.Invoke(enemy);
+    public static Action<EnemyController, float> OnEnemyKilled;
+    public static void EnemyKilled(EnemyController enemy, float reward) => OnEnemyKilled?.Invoke(enemy, reward);
 
     // EnemyReachedGoal
-    public static Action<EnemyController> OnEnemyReachedGoal;
-    public static void EnemyReachedGoal(EnemyController enemy) => OnEnemyReachedGoal?.Invoke(enemy);
+    public static Action<EnemyController, float> OnEnemyReachedGoal;
+    public static void EnemyReachedGoal(EnemyController enemy, float damage) => OnEnemyReachedGoal?.Invoke(enemy, damage);
 
     // PlayerGoldChanged
     public static Action<int> OnPlayerGoldChanged;
@@ -90,4 +90,12 @@ public static class GameEvents
     // Game Clear
     public static Action OnGameClear;
     public static void GameClear() => OnGameClear?.Invoke();
+
+    // Stage Clear
+    public static Action OnStageClear;
+    public static void StageClear() => OnStageClear?.Invoke();
+
+    //Stage Move
+    public static Action OnStageMove;
+    public static void StageMove() => OnStageMove?.Invoke();
 }

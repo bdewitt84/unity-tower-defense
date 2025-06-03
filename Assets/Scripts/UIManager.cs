@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // Author: Brett DeWitt
 // 
@@ -15,8 +16,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text playerGoldText;
     [SerializeField] private TMP_Text gameClearText;
     [SerializeField] private TMP_Text gameOverText;
+    [SerializeField] private TMP_Text levelNumberText;
 
-
+    [SerializeField] private int level;
     //
     // Subscribe to GameEvents events in start()
     //
@@ -24,21 +26,23 @@ public class UIManager : MonoBehaviour
     {
         GameEvents.OnPlayerHealthChanged += HandlePlayerHealthChanged;
         GameEvents.OnPlayerGoldChanged += HandlePlayerGoldChanged;
-        GameEvents.OnGameClear += HandleGameClear;
+        GameEvents.OnStageClear += HandleStageClear;
         GameEvents.OnGameOver += HandleGameOver;
+        GameEvents.OnStageMove += HandleStageMove;
     }
 
     private void OnDisable()
     {
         GameEvents.OnPlayerHealthChanged -= HandlePlayerHealthChanged;
         GameEvents.OnPlayerGoldChanged -= HandlePlayerGoldChanged;
-        GameEvents.OnGameClear -= HandleGameClear;
+        GameEvents.OnStageClear -= HandleStageClear;
         GameEvents.OnGameOver -= HandleGameOver;
+        GameEvents.OnStageMove -= HandleStageMove;
     }
 
     void Start()
     {
-        
+        levelNumberText.text = "Level " + level;
     }
 
     //
@@ -52,6 +56,7 @@ public class UIManager : MonoBehaviour
     private void HandlePlayerGoldChanged(int updatedGold)
     {
         playerGoldText.text = "Gold: " + updatedGold.ToString();
+        //GameEvents.StageMove();
     }
 
     private void HandleGameOver()
@@ -59,7 +64,13 @@ public class UIManager : MonoBehaviour
         gameOverText.gameObject.SetActive(true);
     }
 
-    private void HandleGameClear()
+    private void HandleStageMove()
+    {
+        gameClearText.gameObject.SetActive(false);
+        SceneManager.LoadScene("Level " + (level + 1));
+    }
+
+    private void HandleStageClear()
     {
         gameClearText.gameObject.SetActive(true);
     }

@@ -18,15 +18,12 @@ public class GameBoardController : MonoBehaviour
     [SerializeField] private int width = 22;
     [SerializeField] private int height = 22;
     [SerializeField] private float cellSize = 1.0f;
-
     private GridData board;
 
     private void Start()
     {
         InitializeBoard();
     }
-
-    // Creates the grid used to store the board state
     private void InitializeBoard()
     {
         board = new GridData(width, height);
@@ -53,8 +50,8 @@ public class GameBoardController : MonoBehaviour
     // Places instance of tower in center of cell corresponding to globalPosition
     public void PlaceTower(Vector3 globalPosition, GameObject towerInstance)
     {
-        GridCoordinate girdCoord = GetGridCoordinate(globalPosition);
-        board.SetCellOccupied(girdCoord.X, girdCoord.Y, true);
+        GridCoordinate gridCoord = GetGridCoordinate(globalPosition);
+        board.SetCellOccupied(gridCoord.X, gridCoord.Y, true);
 
         globalPosition = SnapToGrid(globalPosition);
         towerInstance.transform.position = globalPosition;
@@ -81,10 +78,9 @@ public class GameBoardController : MonoBehaviour
     // Returns position in the center of the cell at worldPosition
     public Vector3 SnapToGrid(Vector3 worldPosition)
     {
-        GridCoordinate girdCoord = GetGridCoordinate(worldPosition);
-        worldPosition = GetWorldPositionFromGridCoordinates(girdCoord);
+        GridCoordinate gridCoord = GetGridCoordinate(worldPosition);
+        worldPosition = GetWorldPositionFromGridCoordinates(gridCoord);
         Vector3 offset = new Vector3(cellSize/2, 0.0f, cellSize/2);
         return worldPosition += offset;
     }
-
 }

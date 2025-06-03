@@ -28,9 +28,10 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] private float speed = 4f;
     [SerializeField] private float health = 100;
-
+    [SerializeField] private float reward = 5;
+    [SerializeField] private float damage = 5;
     private Material enemyMaterial;
-    Color originalColor;
+    [SerializeField] Color originalColor;
 
 
     private Renderer[] enemyRenderers;
@@ -122,6 +123,7 @@ public class EnemyController : MonoBehaviour
         {
             // Clone each material so changes don't affect shared material
             Material clonedMat = new Material(renderer.material);
+            clonedMat.color = originalColor;
             renderer.material = clonedMat;
             enemyMaterials.Add(clonedMat);
             originalColors.Add(clonedMat.color);
@@ -187,12 +189,12 @@ public class EnemyController : MonoBehaviour
 
     private void BroadcastEnemyReachedGoalEvent()
     {
-        GameEvents.EnemyReachedGoal(this);
+        GameEvents.EnemyReachedGoal(this, damage);
     }
 
     private void BroadcastEnemyKilledEvent()
     {
-        GameEvents.EnemyKilled(this);
+        GameEvents.EnemyKilled(this, reward);
     }
 
     private bool OutOfHealth()
