@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveNumber: 2
   spawnDelay: 4
-  enemyCounts: 0500000003000000
+  enemyCounts: 0500000005000000
   enemyTypes:
   - {fileID: 3791977713592029489, guid: b081c53d5e19cae4ca7405ad0246ccd9, type: 3}
   - {fileID: 3791977713592029489, guid: 2e849637faaed5245a5f1b8fe4c0d03d, type: 3}

@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: L3Wave5Data
   m_EditorClassIdentifier: 
   waveNumber: 5
-  spawnDelay: 25
-  enemyCounts: 140000000f0000000a000000
+  spawnDelay: 11
+  enemyCounts: 190000000f0000000f0000000f00000005000000
   enemyTypes:
   - {fileID: 3791977713592029489, guid: b081c53d5e19cae4ca7405ad0246ccd9, type: 3}
   - {fileID: 3791977713592029489, guid: 2e849637faaed5245a5f1b8fe4c0d03d, type: 3}
   - {fileID: 3791977713592029489, guid: 4b7f70ba060fb7b46a09cae392f0a46f, type: 3}
+  - {fileID: 3791977713592029489, guid: 7cb4300fc61a65a4b91cb5af12e3876f, type: 3}
+  - {fileID: 3791977713592029489, guid: e2dbce6ccc239684ba76c1d1c272d96e, type: 3}
   spawnInterval: 0.6

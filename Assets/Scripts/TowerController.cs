@@ -20,15 +20,20 @@ public class TowerController : MonoBehaviour
     [SerializeField] private float damage = 5f;
     private float currentCooldown = 0f;
     [SerializeField] private float maxCooldown = 2f;
+    [SerializeField] private Color towerColor;
 
     [SerializeField] private int cost = 10;
+    private Renderer[] towerRenderers;
 
     private Vector3 _firingPosition = new Vector3(0.0f, 2.5f, 0.0f);
 
     [SerializeField] private Projectile _projectilePrefab;
     [SerializeField] private float _projectileSpeed;
-
-
+    
+    private void Start()
+    {
+        InitializeMaterial();
+    }
     private void OnEnable()
     {
         GameEvents.OnGameOver += HandleGameOver;
@@ -118,5 +123,17 @@ public class TowerController : MonoBehaviour
     private void HandleGameOver()
     {
         Destroy(gameObject);
+    }
+
+    private void InitializeMaterial()
+    {
+        towerRenderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in towerRenderers)
+        {
+            // Clone each material so changes don't affect shared material
+            Material clonedMat = new Material(renderer.material);
+            clonedMat.color = towerColor;
+            renderer.material = clonedMat;
+        }
     }
 }
