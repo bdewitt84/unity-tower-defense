@@ -8,7 +8,7 @@ using UnityEngine;
 //
 // Date: 5.23.2025
 //
-// Handles inputs using a finite state machine implementation
+// Handles inputs using a finite state machine
 
 
 public class InputManager : MonoBehaviour

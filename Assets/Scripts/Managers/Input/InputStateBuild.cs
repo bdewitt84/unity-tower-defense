@@ -24,9 +24,16 @@ public class InputStateBuild : InputStateBase
     {
         if (LeftMouseButtonIsDown())
         {
-            GetRaycastHit(out RaycastHit hit, _inputManager.GroundLayer);
-            Debug.Log($"Build click at ({hit.point})");
-            GameEvents.TowerPlacementRequest(hit.point, _towerPrefab);
+            RaycastHit hit;
+            if (GetRaycastHit(out hit, _inputManager.GroundLayer | _inputManager.PathLayer))
+            {
+                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    Debug.Log($"Build click at ({hit.point})");
+                    GameEvents.TowerPlacementRequest(hit.point, _towerPrefab);
+                }
+            }
+            
         }
         if (RightMouseButtonIsDown())
         {
@@ -37,10 +44,14 @@ public class InputStateBuild : InputStateBase
         }
         else
         {
-            if (GetRaycastHit(out RaycastHit hit, _inputManager.GroundLayer))
+            RaycastHit hit;
+            if (GetRaycastHit(out hit, _inputManager.GroundLayer | _inputManager.PathLayer))
             {
-                _disableRequested = false;
-                GameEvents.TowerPreviewRequest(hit.point, _towerPrefab);
+                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    _disableRequested = false;
+                    GameEvents.TowerPreviewRequest(hit.point, _towerPrefab);
+                }
             }
             else if (!_disableRequested)
             {

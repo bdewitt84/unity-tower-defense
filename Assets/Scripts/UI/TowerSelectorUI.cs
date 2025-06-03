@@ -3,7 +3,10 @@
 using UnityEngine;
 using UnityEngine.UI; // Required for the Button component
 
-
+/// Author: Brett DeWitt
+/// 
+/// Date: 5.23.25
+/// 
 /// <summary>
 /// Component attached to a UI Button that represents a specific tower type for selection.
 /// </summary>
