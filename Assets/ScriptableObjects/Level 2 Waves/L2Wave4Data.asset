@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7f1ffb615c17fa49b0926232c13edd1, type: 3}
   m_Name: L2Wave4Data
   m_EditorClassIdentifier: 
-  waveNumber: 3
-  spawnDelay: 18
-  enemyCounts: 0a00000007000000
+  waveNumber: 4
+  spawnDelay: 11
+  enemyCounts: 0a0000000500000003000000
   enemyTypes:
   - {fileID: 3791977713592029489, guid: b081c53d5e19cae4ca7405ad0246ccd9, type: 3}
   - {fileID: 3791977713592029489, guid: 2e849637faaed5245a5f1b8fe4c0d03d, type: 3}
+  - {fileID: 3791977713592029489, guid: 4b7f70ba060fb7b46a09cae392f0a46f, type: 3}
   spawnInterval: 0.7

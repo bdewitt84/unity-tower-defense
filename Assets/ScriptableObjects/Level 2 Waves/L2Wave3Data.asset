@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: L2Wave3Data
   m_EditorClassIdentifier: 
   waveNumber: 3
-  spawnDelay: 11
+  spawnDelay: 4
   enemyCounts: 0700000005000000
   enemyTypes:
   - {fileID: 3791977713592029489, guid: b081c53d5e19cae4ca7405ad0246ccd9, type: 3}

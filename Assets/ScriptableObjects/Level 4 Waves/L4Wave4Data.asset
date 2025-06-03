@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7f1ffb615c17fa49b0926232c13edd1, type: 3}
+  m_Name: L4Wave4Data
+  m_EditorClassIdentifier: 
+  waveNumber: 4
+  spawnDelay: 4
+  enemyCounts: 230000001900000019000000190000000f00000005000000
+  enemyTypes:
+  - {fileID: 3791977713592029489, guid: b081c53d5e19cae4ca7405ad0246ccd9, type: 3}
+  - {fileID: 3791977713592029489, guid: 2e849637faaed5245a5f1b8fe4c0d03d, type: 3}
+  - {fileID: 3791977713592029489, guid: 4b7f70ba060fb7b46a09cae392f0a46f, type: 3}
+  - {fileID: 3791977713592029489, guid: 7cb4300fc61a65a4b91cb5af12e3876f, type: 3}
+  - {fileID: 3791977713592029489, guid: e2dbce6ccc239684ba76c1d1c272d96e, type: 3}
+  - {fileID: 3791977713592029489, guid: 470f9ea8fccd6de45bf0c9c7cba25083, type: 3}
+  spawnInterval: 0.6

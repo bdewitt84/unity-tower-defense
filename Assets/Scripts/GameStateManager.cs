@@ -16,13 +16,11 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private int playerHealth;
     [SerializeField] private int playerGold;
     [SerializeField] private int playerHealthStart = 100;
-    [SerializeField] private int playerGoldStart = 50;
     [SerializeField] private float timer = 0.0f;
     private void Start()
     {
         playerHealth = playerHealthStart;
         GameEvents.OnPlayerHealthChanged(playerHealth);
-        playerGold = playerGoldStart;
         GameEvents.OnPlayerGoldChanged(playerGold);
     }
     private void Update()
