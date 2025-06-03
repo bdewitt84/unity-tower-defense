@@ -12,12 +12,12 @@ public class InputStateBuild : InputStateBase
 
     public override void Enter()
     {
-        
+        GameEvents.OnTowerSelected += HandleTowerSelected;
     }
 
     public override void Exit()
     {
-        
+        GameEvents.OnTowerSelected -= HandleTowerSelected;
     }
 
     public override void Update()
@@ -59,5 +59,10 @@ public class InputStateBuild : InputStateBase
                 GameEvents.TowerPreviewDisable();
             }
         }
+    }
+
+    void HandleTowerSelected(GameObject tower)
+    {
+        _towerPrefab = tower;
     }
 }
