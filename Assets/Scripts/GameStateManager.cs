@@ -25,8 +25,13 @@ public class GameStateManager : MonoBehaviour
     }
     private void Update()
     {
-        if (timer > 0.0f)
+        if (Input.GetKeyDown(KeyCode.F12))
         {
+            Debug.Log($"Got F12: timer is {timer}");
+            GameEvents.StageMove();
+        }
+        if (timer > 0.0f)
+        { 
             timer -= Time.deltaTime;
             if (timer <= 0.0f)
             {
