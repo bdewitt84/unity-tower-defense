@@ -48,7 +48,7 @@
 
 ## 4. Playable WebGL build
 
-- Link to [WebGL build](<https://play.unity.com/en/games/ee8b7497-1502-4768-ae53-874eede15a69/untitled-tower-defense>) on Unity Play.
+- Link to [WebGL build](<https://play.unity.com/en/games/01cd8066-7ed4-4968-9375-40e82adaa106/untitled-tower-defense>) on Unity Play.
 
 ---
 
