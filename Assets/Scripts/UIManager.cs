@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 // Author: Brett DeWitt
 // 
@@ -17,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text gameClearText;
     [SerializeField] private TMP_Text gameOverText;
     [SerializeField] private TMP_Text levelNumberText;
+    [SerializeField] private Button mainMenuButton;
 
     [SerializeField] private int level;
     //
@@ -61,6 +63,7 @@ public class UIManager : MonoBehaviour
 
     private void HandleGameOver()
     {
+        mainMenuButton.gameObject.SetActive(true);
         gameOverText.gameObject.SetActive(true);
     }
 

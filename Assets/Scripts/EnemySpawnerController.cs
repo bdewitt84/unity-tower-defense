@@ -38,6 +38,8 @@ public class EnemySpawnerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameIsOver()) return;
+
         if (waveIndex != -1)
         {
             if (WaveInProgress())
@@ -71,6 +73,11 @@ public class EnemySpawnerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool GameIsOver()
+    {
+        return Time.timeScale == 0f;
     }
 
     private bool AllWavesCleared()

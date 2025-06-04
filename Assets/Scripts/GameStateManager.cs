@@ -18,6 +18,8 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private int playerHealthStart = 100;
     [SerializeField] private int playerGoldStart = 50;
     [SerializeField] private float timer = 0.0f;
+    private bool isGameOver = false;
+
     private void Start()
     {
         playerHealth = playerHealthStart;
@@ -27,6 +29,15 @@ public class GameStateManager : MonoBehaviour
     }
     private void Update()
     {
+        if (isGameOver) return;
+
+        if (playerHealth <= 0)
+        {
+            isGameOver = true;
+            GameEvents.GameOver();
+            return;
+        }
+
         if (timer > 0.0f)
         {
             timer -= Time.deltaTime;
@@ -43,6 +54,7 @@ public class GameStateManager : MonoBehaviour
         GameEvents.OnEnemyReachedGoal += HandleEnemyReachedGoal;
         GameEvents.OnTowerPlacementSuccess += HandleTowerPlacementSuccess;
         GameEvents.OnStageClear += HandleStageClear;
+        GameEvents.OnGameOver += HandleGameOver; 
     }
 
 
@@ -52,17 +64,30 @@ public class GameStateManager : MonoBehaviour
         GameEvents.OnEnemyReachedGoal -= HandleEnemyReachedGoal;
         GameEvents.OnTowerPlacementSuccess -= HandleTowerPlacementSuccess;
         GameEvents.OnStageClear -= HandleStageClear;
+        GameEvents.OnGameOver -= HandleGameOver;
 
     }
 
     private void HandleEnemyReachedGoal(EnemyController enemy, float damage)
     {
+
+        if (isGameOver) return;
+
         playerHealth -= (int)damage;
         GameEvents.PlayerHealthChanged(playerHealth);
-        if (playerHealth <= 0)
+
+        if (playerHealth <= 0 && !isGameOver)
         {
-            GameEvents.GameOver();
+            isGameOver = true;
+            GameEvents.GameOver(); 
         }
+    }
+
+    private void HandleGameOver()
+    {
+        isGameOver = true;
+        Time.timeScale = 0f;
+        Debug.Log("Game Over triggered");
     }
 
     private void HandleEnemyKilled(EnemyController enemy, float reward)
