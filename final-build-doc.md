@@ -52,7 +52,13 @@
 
 ---
 
-## 5. GitHub Repository
+## 5. WebGL .zip
+
+- Link to [WebGL .zip](<https://drive.google.com/file/d/12Gn4kCnqjULdpK0O8W4LBTJLVqaLPlgq/view?usp=sharing>) on Google Drive
+
+---
+
+## 6. GitHub Repository
 
 - Link to the [GitHub Repo](<https://github.com/bdewitt84/unity-tower-defense>) for the project.
     - The **"final" tag** for the build has been created.
